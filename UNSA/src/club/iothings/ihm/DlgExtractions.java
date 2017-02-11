@@ -22,12 +22,18 @@ public class DlgExtractions extends JDialog {
 	private JPanel jContentPane = null;
 	private JTextField tfEmplacement_Etab = null;
 	private JButton btnEtablissement = null;
+	
+	private JTextField tfEmplacement_Cat = null;
+	private JButton btnCategorie = null;
+	
 	private JButton btnFermer = null;
 	
 	private JLabel labTitre = null;
 	private JLabel labEtablissement = null;
+	private JLabel labCategorie = null;
 	
 	private JProgressBar progressEtablissement = null;
+	private JProgressBar progressCategorie = null;
 	
 	private Connection dbMySQL = null;
 	
@@ -42,7 +48,8 @@ public class DlgExtractions extends JDialog {
 		dbMySQL = connMySQL;
 		
 		//----- Répertoire de destination des fichiers compilés -----
-		tfEmplacement_Etab.setText("C:/UNSA/Etablissements/");
+		tfEmplacement_Etab.setText("C:/Fichiers_Rectorat/Etablissements/");
+		
 	}
 	
 	private void initialize() {
@@ -59,6 +66,11 @@ public class DlgExtractions extends JDialog {
 			jContentPane.add(getTfEmplacement_Etab(), null);
 			jContentPane.add(getBtnEtablissement(), null);
 			jContentPane.add(getProgressEtablissement(), null);
+			
+			jContentPane.add(getTfEmplacement_Cat(), null);
+			jContentPane.add(getBtnCategorie(), null);
+			jContentPane.add(getProgressCategorie(), null);
+			
 			jContentPane.add(getBtnFermer(), null);
 						
 			labTitre = new JLabel();
@@ -72,6 +84,12 @@ public class DlgExtractions extends JDialog {
 			labEtablissement.setFont(new Font("Arial", Font.PLAIN, 14));
 			labEtablissement.setText("Etablissements");
 			jContentPane.add(labEtablissement, null);
+			
+			labCategorie = new JLabel();
+			labCategorie.setBounds(new Rectangle(20, 140, 100, 30));
+			labCategorie.setFont(new Font("Arial", Font.PLAIN, 14));
+			labCategorie.setText("Catégorie");
+			jContentPane.add(labCategorie, null);
 		}
 		return jContentPane;
 	}
@@ -111,6 +129,41 @@ public class DlgExtractions extends JDialog {
 		return btnEtablissement;
 	}
 	
+	private JButton getBtnCategorie() {
+		if (btnCategorie == null) {			
+			btnCategorie = new JButton("Compiler");
+			btnCategorie.setFont(new Font("Arial", Font.PLAIN, 14));
+			btnCategorie.setBounds(new Rectangle(430, 140, 153, 30));
+			btnCategorie.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {					
+					
+					Thread thread_export_categorie = new Thread() {
+						public void run() {
+									
+//							String prefixe = "liste.UNSA EDUCATION Montpellier.";
+//							
+//							process_running = true;
+//							btnEtablissement.setEnabled(false);
+//							tfEmplacement_Etab.setEnabled(false);
+//							
+//							FcnExportEtablissement etab = new FcnExportEtablissement(dbMySQL, tfEmplacement_Cat.getText(), prefixe, DlgExtractions.this);
+//							etab.start();
+//							
+//							btnEtablissement.setEnabled(true);
+//							tfEmplacement_Etab.setEnabled(true);
+//							process_running = false;
+						}
+					};
+					
+					//----- Lancement du thread -----
+					thread_export_categorie.setDaemon(true);
+					thread_export_categorie.start();
+				}
+			});
+		}
+		return btnCategorie;
+	}
+	
 	private JButton getBtnFermer() {
 		if (btnFermer == null) {			
 			btnFermer = new JButton("Fermer");
@@ -146,6 +199,15 @@ public class DlgExtractions extends JDialog {
 		return tfEmplacement_Etab;
 	}
 	
+	private JTextField getTfEmplacement_Cat() {
+		if (tfEmplacement_Cat == null) {
+			tfEmplacement_Cat = new JTextField();
+			tfEmplacement_Cat.setFont(new Font("Arial", Font.PLAIN, 14));
+			tfEmplacement_Cat.setBounds(new Rectangle(130, 141, 290, 30));
+		}
+		return tfEmplacement_Cat;
+	}
+	
 	private JProgressBar getProgressEtablissement() {
 		if (progressEtablissement == null) {
 			progressEtablissement = new JProgressBar();
@@ -156,6 +218,18 @@ public class DlgExtractions extends JDialog {
 			progressEtablissement.setForeground(Color.getHSBColor(0.5833f, 0.80f, 1.00f));
 		}
 		return progressEtablissement;
+	}
+	
+	private JProgressBar getProgressCategorie() {
+		if (progressCategorie == null) {
+			progressCategorie = new JProgressBar();
+			progressCategorie.setFont(new Font("Arial", Font.PLAIN, 14));
+			progressCategorie.setBounds(600, 140, 150, 30);
+			progressCategorie.setStringPainted(true);
+			progressCategorie.setString("%");
+			progressCategorie.setForeground(Color.getHSBColor(0.5833f, 0.80f, 1.00f));
+		}
+		return progressCategorie;
 	}
 	
 	public void updatePbEtablissementMax(int valeurMax){

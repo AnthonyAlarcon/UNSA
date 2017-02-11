@@ -55,5 +55,26 @@ public class ModStoredProcedures {
 		}
 		return resultat;
 	}
+	
+	public String sp_Grade_Ajouter(String strId, String strDesignation, String strCategorie){	
+
+		String resultat = "";
+		
+		try {
+			CallableStatement stmt = null;
+			stmt = dbMySQL.prepareCall("{call pm_grade_ajouter(?,?,?)}");					
+			stmt.setString("iid", strId);
+			stmt.setString("idesignation", strDesignation);
+			stmt.setString("icategorie", strCategorie);	
+			stmt.execute();
+			
+			resultat = "OK";
+			
+		} catch(Exception ex) {
+			resultat = "ERREUR";
+			System.out.println("### sp_Grade_Ajouter ### " + ex.toString());
+		}
+		return resultat;
+	}
 
 }

@@ -20,12 +20,17 @@ public class DataConnexion {
 	}
 	
 	private void setValues(){
-		url = "jdbc:mysql://www.iothings.club:3306/";
-		database = "db_unsa";
-		login = "alarcon";
-		password = "gunnar30";
+//		url = "jdbc:mysql://www.iothings.club:3306/";
+//		database = "db_unsa";
+//		login = "alarcon";
+//		password = "gunnar30";
 		
-		version = "1.00";
+		url = "jdbc:mysql://127.0.0.1/";
+		database = "db_unsa";
+		login = "user_unsa";
+		password = "unsa";
+		
+		version = "1.01";
 	}
 	
 	public String start(){

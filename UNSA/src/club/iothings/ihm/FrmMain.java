@@ -37,6 +37,7 @@ public class FrmMain extends JFrame {
 	private JButton btnExtractions = null;
 	
 	private JLabel labTitre = null;
+	private JLabel labVersion = null;
 	private JLabel labProgression = null;
 	
 	private JScrollPane scrollMessages = null;
@@ -63,6 +64,9 @@ public class FrmMain extends JFrame {
 		super();
 		initialize();
 		
+		DataConnexion dbMySQL = new DataConnexion();
+		
+		labVersion.setText(dbMySQL.getVersion());
 	}
 	
 	private void initialize() {
@@ -86,6 +90,12 @@ public class FrmMain extends JFrame {
 			labTitre.setFont(new Font("Arial", Font.BOLD, 24));
 			labTitre.setText("UNSA");
 			jContentPane.add(labTitre, null);
+			
+			labVersion = new JLabel();
+			labVersion.setBounds(new Rectangle(30, 67, 600, 40));
+			labVersion.setFont(new Font("Arial", Font.PLAIN, 14));
+			labVersion.setText("");
+			jContentPane.add(labVersion, null);
 			
 			labProgression= new JLabel();
 			labProgression.setBounds(new Rectangle(640, 110, 140, 40));
@@ -283,6 +293,8 @@ public class FrmMain extends JFrame {
 											if (resultat.compareTo("OK")!=0){
 												System.out.println("Erreur I= " + i);
 											}
+											
+											proc.sp_Grade_Ajouter(grade, "VIDE", "VIDE");
 										}
 										
 										//----- Mise à jour du témoin de progression -----
