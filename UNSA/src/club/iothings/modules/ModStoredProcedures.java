@@ -32,7 +32,7 @@ public class ModStoredProcedures {
 			
 		} catch(Exception ex) {
 			resultat = "ERREUR";
-			System.out.println("### sp_Data_Ajouter ### " + ex.toString());
+			System.out.println("### ModStoredProcedures ### sp_Data_Ajouter ### " + ex.toString());
 		}
 		return resultat;
 	}
@@ -51,7 +51,7 @@ public class ModStoredProcedures {
 			
 		} catch(Exception ex) {
 			resultat = "ERREUR";
-			System.out.println("### sp_Data_Supprimer_Academie ###" + ex.toString());
+			System.out.println("### ModStoredProcedures ### sp_Data_Supprimer_Academie ###" + ex.toString());
 		}
 		return resultat;
 	}
@@ -72,7 +72,7 @@ public class ModStoredProcedures {
 			
 		} catch(Exception ex) {
 			resultat = "ERREUR";
-			System.out.println("### sp_Grade_Ajouter ### " + ex.toString());
+			System.out.println("### ModStoredProcedures ### sp_Grade_Ajouter ### " + ex.toString());
 		}
 		return resultat;
 	}
@@ -96,7 +96,7 @@ public class ModStoredProcedures {
 			
 		} catch(Exception ex) {
 			resultat = "ERREUR";
-			System.out.println("### sp_UAI_Ajouter ### " + ex.toString());
+			System.out.println("### ModStoredProcedure ### sp_UAI_Ajouter ### " + ex.toString());
 		}
 		return resultat;
 	}

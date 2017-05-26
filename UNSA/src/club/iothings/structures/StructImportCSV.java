@@ -21,7 +21,7 @@ public class StructImportCSV {
 	public StructImportCSV(Connection connMySQL){
 		dbMySQL = connMySQL;
 	
-		//--- Affectation des valeurs stockées dans la base de données ---
+		//--- Récupération de la valeur des indices de colonne ---
 		setValues();
 	}
 	
@@ -39,8 +39,7 @@ public class StructImportCSV {
 			
 			Statement stmt_valeur = dbMySQL.createStatement();
 			ResultSet rset_valeur = stmt_valeur.executeQuery(query_valeur);
-			
-//			System.out.println(" ----- Chargement des valeurs IMPORT_CSV -----");
+
 			
 			while (rset_valeur.next()){
 				item = rset_valeur.getString(1);
@@ -77,12 +76,11 @@ public class StructImportCSV {
 					break;
 				}
 			}
-//			System.out.println(" ----- Fin Chargement des valeurs IMPORT_CSV -----");
 			
 			resultat = "OK";
 			
 		} catch (Exception ex){
-			System.out.println("### Erreur StructImportCSV # setValues # " + ex.toString());
+			System.out.println("### StructImportCSV ### setValues # " + ex.toString());
 			resultat = "ERREUR";
 		}
 		
@@ -91,47 +89,38 @@ public class StructImportCSV {
 	
 	private void setInd_NomUsuel(int intNomUsuel){
 		ind_nom_usuel = intNomUsuel;
-//		System.out.println("nom_usuel = " + ind_nom_usuel);
 	}
 	
 	private void setInd_Prenom(int intPrenom){
 		ind_prenom = intPrenom;
-//		System.out.println("prenom = " + ind_prenom);
 	}
 	
 	private void setInd_AdresseMail(int intAdresseMail){
 		ind_adresse_mail = intAdresseMail;
-//		System.out.println("adresse_mail = " + ind_adresse_mail);
 	}
 	
 	private void setInd_Academie(int intAcademie){
 		ind_academie = intAcademie;
-//		System.out.println("academie = " + ind_academie);
 	}
 	
 	private void setInd_UaiOccupation(int intUaiOccupation){
 		ind_uai_occupation = intUaiOccupation;
-//		System.out.println("uai_occupation = " + ind_uai_occupation);
 	}
 	
 	private void setInd_TypeUai(int intTypeUai){
 		ind_type_uai = intTypeUai;
-//		System.out.println("type_uai = " + ind_type_uai);
 	}
 	
 	private void setInd_Grade(int intGrade){
 		ind_grade = intGrade;
-//		System.out.println("grade = " + ind_grade);
 	}
 	
 	private void setInd_Ccp(int intCcp){
 		ind_ccp = intCcp;
-//		System.out.println("ccp = " + ind_ccp);
 	}
 	
 	private void setNbColonnes(int intNbColonnes){
 		nb_colonnes = intNbColonnes;
-//		System.out.println("nb_colonnes = " + nb_colonnes);
 	}
 	
 	public int getInd_NomUsuel(){

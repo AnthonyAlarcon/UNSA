@@ -37,18 +37,17 @@ public class DataConnexion {
 		
 		String resultat = "";
 		
-		dbMySQL = null;
-		
 		try {
+			dbMySQL = null;
 			
-			//----- 	
+			// --- Tentative de connexion à la base de données ---
 			dbMySQL = DriverManager.getConnection( url + database, login, password);
 			resultat = "OK";
 			
 		} catch (Exception ex) {
 			dbMySQL = null;
-			resultat = "ERREUR";
 			
+			resultat = "ERREUR";
 			System.out.println("### DataConnexion ### start ### " + ex.toString());
 		}
 		
