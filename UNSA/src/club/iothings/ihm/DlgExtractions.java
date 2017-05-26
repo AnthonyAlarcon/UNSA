@@ -314,7 +314,7 @@ public class DlgExtractions extends JDialog {
 							tfTypeUAI.setEnabled(false);
 							tfCCP.setEnabled(false);
 														
-							FcnExportFiltres filtres = new FcnExportFiltres(dbMySQL, "C:/Fichiers_Rectorat/Filtres/", tfDepartement.getText(), tfGrade.getText(), tfTypeUAI.getText(), tfCCP.getText(), DlgExtractions.this);
+							FcnExportFiltres filtres = new FcnExportFiltres(dbMySQL, "C:/Fichiers_Rectorat/Filtres/", "ExportFiltres", tfDepartement.getText(), tfGrade.getText(), tfTypeUAI.getText(), tfCCP.getText(), DlgExtractions.this);
 							filtres.start();
 							
 							btnFiltres.setEnabled(true);
