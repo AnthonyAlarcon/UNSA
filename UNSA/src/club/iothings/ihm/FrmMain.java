@@ -246,6 +246,7 @@ public class FrmMain extends JFrame {
 									String adresse_mail = "";
 									String academie = "";
 									String uai_occupation = "";
+									String departement = "";
 									String type_uai = "";
 									String grade = "";
 									String ccp = "";
@@ -277,6 +278,8 @@ public class FrmMain extends JFrame {
 										uai_occupation = splitarray[imp_csv.getInd_UaiOccupation()];
 										//System.out.println(">> " + uai_occupation);
 										
+										departement = IsolerDepartement(uai_occupation);
+										
 										type_uai = splitarray[imp_csv.getInd_TypeUai()];
 										//System.out.println(">> " + type_uai);
 										
@@ -291,10 +294,12 @@ public class FrmMain extends JFrame {
 											resultat = proc.sp_Data_Ajouter(nom_usage, prenom, adresse_mail, academie, uai_occupation, type_uai, grade, ccp);
 											
 											if (resultat.compareTo("OK")!=0){
-												System.out.println("Erreur I= " + i);
+												System.out.println("### Erreur DATA I= " + i);
 											}
 											
+											
 											proc.sp_Grade_Ajouter(grade, "VIDE", "VIDE");
+											proc.sp_UAI_ajouter(uai_occupation, "VIDE", departement, academie, type_uai, "VIDE");
 										}
 										
 										//----- Mise à jour du témoin de progression -----
@@ -329,6 +334,25 @@ public class FrmMain extends JFrame {
 			});
 		}
 		return btnImporter;
+	}
+	
+	private String IsolerDepartement (String strInput){
+		
+		String resultat = "";
+		
+		try {
+			
+			if (strInput.length()>=3){
+				resultat = strInput.substring(1,3);
+			} else {
+				resultat = "ERREUR";
+			}
+			
+		} catch (Exception ex) {
+			System.out.println("### IsolerDepartement ### " + ex.toString());
+		}
+		
+		return resultat;
 	}
 	
 	public void addLogView(String strTexte){

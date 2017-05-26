@@ -30,7 +30,7 @@ public class DataConnexion {
 		login = "user_unsa";
 		password = "unsa";
 		
-		version = "1.02";
+		version = "1.03";
 	}
 	
 	public String start(){

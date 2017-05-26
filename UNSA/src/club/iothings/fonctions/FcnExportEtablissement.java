@@ -60,8 +60,6 @@ public class FcnExportEtablissement {
 				vecRNE.add(rset_rne.getString(1));
 			}
 			
-			//System.out.println("RNE trouvés : " + vecRNE.size());
-			
 			parent.updatePbEtablissementValue(0);
 			parent.updatePbEtablissementMax(vecRNE.size());
 			

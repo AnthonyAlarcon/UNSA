@@ -76,5 +76,29 @@ public class ModStoredProcedures {
 		}
 		return resultat;
 	}
+	
+	public String sp_UAI_ajouter(String strId, String strNom, String strDepartement, String strAcademie, String strTypeUAI, String strGroupe){	
+
+		String resultat = "";
+		
+		try {
+			CallableStatement stmt = null;
+			stmt = dbMySQL.prepareCall("{call pm_uai_ajouter(?,?,?,?,?,?)}");					
+			stmt.setString("iid", strId);
+			stmt.setString("inom", strNom);
+			stmt.setString("idepartement", strDepartement);
+			stmt.setString("iacademie", strAcademie);
+			stmt.setString("itype_uai", strTypeUAI);
+			stmt.setString("igroupe", strGroupe);
+			stmt.execute();
+			
+			resultat = "OK";
+			
+		} catch(Exception ex) {
+			resultat = "ERREUR";
+			System.out.println("### sp_UAI_Ajouter ### " + ex.toString());
+		}
+		return resultat;
+	}
 
 }
