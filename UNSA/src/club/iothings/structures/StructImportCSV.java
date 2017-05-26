@@ -19,6 +19,7 @@ public class StructImportCSV {
 	private int ind_ccp = 0;
 
 	public StructImportCSV(Connection connMySQL){
+		
 		dbMySQL = connMySQL;
 	
 		//--- Récupération de la valeur des indices de colonne ---
@@ -42,6 +43,8 @@ public class StructImportCSV {
 
 			
 			while (rset_valeur.next()){
+				
+				// --- Affectation des valeurs ---
 				item = rset_valeur.getString(1);
 				valeur = rset_valeur.getString(2);
 				

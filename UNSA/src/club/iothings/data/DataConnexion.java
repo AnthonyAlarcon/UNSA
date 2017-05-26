@@ -20,17 +20,21 @@ public class DataConnexion {
 	}
 	
 	private void setValues(){
+		
+		// --- Serveur MySQL web ---
 //		url = "jdbc:mysql://www.iothings.club:3306/";
 //		database = "db_unsa";
 //		login = "alarcon";
 //		password = "gunnar30";
 		
+		// --- Serveur MySQL local ---
 		url = "jdbc:mysql://127.0.0.1/";
 		database = "db_unsa";
 		login = "user_unsa";
 		password = "unsa";
 		
-		version = "1.03";
+		// --- Version du logiciel client ---
+		version = "1.04";
 	}
 	
 	public String start(){
@@ -38,6 +42,8 @@ public class DataConnexion {
 		String resultat = "";
 		
 		try {
+			
+			// --- Reset de la connection ---
 			dbMySQL = null;
 			
 			// --- Tentative de connexion à la base de données ---
@@ -45,6 +51,8 @@ public class DataConnexion {
 			resultat = "OK";
 			
 		} catch (Exception ex) {
+			
+			// --- Reset de la connection ---
 			dbMySQL = null;
 			
 			resultat = "ERREUR";
