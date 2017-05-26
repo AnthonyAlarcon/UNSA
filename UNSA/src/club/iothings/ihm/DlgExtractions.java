@@ -14,6 +14,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import club.iothings.fonctions.FcnExportEtablissement;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 
 public class DlgExtractions extends JDialog {
@@ -23,6 +25,19 @@ public class DlgExtractions extends JDialog {
 	private JTextField tfEmplacement_Etab = null;
 	private JButton btnEtablissement = null;
 	
+	private JScrollPane scrollPartieA = null;
+	private JScrollPane scrollPartieB = null;
+	private JScrollPane scrollPartieC = null;
+	private JScrollPane scrollPartieD = null;
+	private JTextArea taPartieA = null;
+	private JTextArea taPartieB = null;
+	private JTextArea taPartieC = null;
+	private JTextArea taPartieD = null;
+	private JLabel labPartieA = new JLabel();
+	private JLabel labPartieB = new JLabel();
+	private JLabel labPartieC = new JLabel();
+	private JLabel labPartieD = new JLabel();
+		
 	private JTextField tfEmplacement_Cat = null;
 	private JButton btnCategorie = null;
 	
@@ -40,6 +55,7 @@ public class DlgExtractions extends JDialog {
 	private boolean process_running = false;	
 	
 	
+	
 	public DlgExtractions(Connection connMySQL) {
 		super();
 		initialize();
@@ -53,7 +69,7 @@ public class DlgExtractions extends JDialog {
 	}
 	
 	private void initialize() {
-		this.setSize(800, 480);
+		this.setSize(938, 610);
 		this.setContentPane(getJContentPane());
 		this.setTitle("Extractions - UNSA");
 		this.setResizable(false);
@@ -90,6 +106,55 @@ public class DlgExtractions extends JDialog {
 			labCategorie.setFont(new Font("Arial", Font.PLAIN, 14));
 			labCategorie.setText("Catégorie");
 			jContentPane.add(labCategorie, null);
+			
+			scrollPartieA = new JScrollPane();
+			scrollPartieA.setBounds(130, 240, 290, 70);
+			scrollPartieA.setViewportView(getTaPartieA());
+			jContentPane.add(scrollPartieA);
+			
+			scrollPartieB = new JScrollPane();
+			scrollPartieB.setBounds(130, 321, 290, 70);
+			scrollPartieB.setViewportView(getTaPartieB());
+			jContentPane.add(scrollPartieB);
+			
+			scrollPartieC = new JScrollPane();
+			scrollPartieC.setBounds(600, 240, 290, 70);
+			scrollPartieC.setViewportView(getTaPartieC());
+			jContentPane.add(scrollPartieC);
+			
+			scrollPartieD = new JScrollPane();
+			scrollPartieD.setBounds(600, 321, 290, 70);
+			scrollPartieD.setViewportView(getTaPartieD());
+			jContentPane.add(scrollPartieD);
+			
+			labPartieA = new JLabel();
+			labPartieA.setText("Partie A");
+			labPartieA.setFont(new Font("Arial", Font.PLAIN, 14));
+			labPartieA.setBounds(new Rectangle(20, 140, 100, 30));
+			labPartieA.setBounds(20, 240, 100, 30);
+			jContentPane.add(labPartieA);
+			
+			labPartieB = new JLabel();
+			labPartieB.setText("Partie B");
+			labPartieB.setFont(new Font("Arial", Font.PLAIN, 14));
+			labPartieB.setBounds(new Rectangle(20, 140, 100, 30));
+			labPartieB.setBounds(20, 318, 100, 30);
+			jContentPane.add(labPartieB);
+			
+			labPartieC = new JLabel();
+			labPartieC.setText("Partie C");
+			labPartieC.setFont(new Font("Arial", Font.PLAIN, 14));
+			labPartieC.setBounds(new Rectangle(20, 140, 100, 30));
+			labPartieC.setBounds(483, 240, 100, 30);
+			jContentPane.add(labPartieC);
+			
+			labPartieD = new JLabel();
+			labPartieD.setText("Partie D");
+			labPartieD.setFont(new Font("Arial", Font.PLAIN, 14));
+			labPartieD.setBounds(new Rectangle(20, 140, 100, 30));
+			labPartieD.setBounds(483, 321, 100, 30);
+			jContentPane.add(labPartieD);
+			
 		}
 		return jContentPane;
 	}
@@ -111,7 +176,12 @@ public class DlgExtractions extends JDialog {
 							btnEtablissement.setEnabled(false);
 							tfEmplacement_Etab.setEnabled(false);
 							
-							FcnExportEtablissement etab = new FcnExportEtablissement(dbMySQL, tfEmplacement_Etab.getText(), prefixe, DlgExtractions.this);
+							String partieA = taPartieA.getText();
+							String partieB = taPartieB.getText();
+							String partieC = taPartieC.getText();
+							String partieD = taPartieD.getText();
+							
+							FcnExportEtablissement etab = new FcnExportEtablissement(dbMySQL, tfEmplacement_Etab.getText(), partieA, partieB, partieC, partieD, DlgExtractions.this);
 							etab.start();
 							
 							btnEtablissement.setEnabled(true);
@@ -168,7 +238,7 @@ public class DlgExtractions extends JDialog {
 		if (btnFermer == null) {			
 			btnFermer = new JButton("Fermer");
 			btnFermer.setFont(new Font("Arial", Font.PLAIN, 14));
-			btnFermer.setBounds(new Rectangle(631, 411, 153, 30));
+			btnFermer.setBounds(new Rectangle(769, 541, 153, 30));
 			btnFermer.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {					
 					
@@ -260,5 +330,37 @@ public class DlgExtractions extends JDialog {
 			        }
 			    }
 			);
+	}
+	
+	private JTextArea getTaPartieA() {
+		if (taPartieA == null) {
+			taPartieA = new JTextArea();
+			taPartieA.setText("UNSA Montpellier");
+		}
+		return taPartieA;
+	}
+	
+	private JTextArea getTaPartieB() {
+		if (taPartieB == null) {
+			taPartieB = new JTextArea();
+			taPartieB.setText("UNSA-EDUCATION Montpellier");
+		}
+		return taPartieB;
+	}
+	
+	private JTextArea getTaPartieC() {
+		if (taPartieC == null) {
+			taPartieC = new JTextArea();
+			taPartieC.setText("");
+		}
+		return taPartieC;
+	}
+	
+	private JTextArea getTaPartieD() {
+		if (taPartieD == null) {
+			taPartieD = new JTextArea();
+			taPartieD.setText("unsa-education.syndicat@ac-montpellier.fr,lrmp@unsa-education.org,frederic.vaysse@unsa.org,francoise.parrini@se-unsa.org,gilles,tena@gmail.com");
+		}
+		return taPartieD;
 	}
 }

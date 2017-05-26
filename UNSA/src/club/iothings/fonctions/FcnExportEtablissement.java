@@ -20,18 +20,25 @@ public class FcnExportEtablissement {
 	
 	private String partie_a = "";
 	private String partie_b = "";
+	private String partie_c = "";
+	private String partie_d = "";
 	
-	public FcnExportEtablissement(Connection connMySQL, String strEmplacement, String strPrefixe, DlgExtractions frmParent){
+	public FcnExportEtablissement(Connection connMySQL, String strEmplacement, String strA, String strB, String strC, String strD, DlgExtractions frmParent){
 		
 		//----- Affectation des paramètres -----
 		dbMySQL = connMySQL;
 		emplacement = strEmplacement;
-		prefixe = strPrefixe;
 		parent = frmParent;
 		
 		// --- Préfixes et suffixes utilisés dans la liste récapitulative ---
-		partie_a = "UNSA-EDUCATION Montpellier;UNSA-EDUCATION Montpellier;";
-		partie_b = ";unsa-education.syndicat@ac-montpellier.fr,lrmp@unsa-education.org,frederic.vaysse@unsa.org,francoise.parrini@se-unsa.org,gilles,tena@gmail.com";
+		partie_a = strA;
+		partie_b = strB;
+		partie_c = strC;
+		partie_d = strD;
+		
+		// --- Initialisation du préfixe utilisé dans nom de chaque fichier ---
+		prefixe = "liste." + partie_b + ".";
+		
 	}
 	
 	public String start(){
@@ -93,7 +100,7 @@ public class FcnExportEtablissement {
 			BufferedWriter out_liste = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(emplacement + "liste.csv"), "UTF-8"));
 			
 			for (int i=0; i < vecRNE.size(); i++){
-				out_liste.write(partie_a + vecRNE.get(i) + partie_b);
+				out_liste.write(partie_a + ";" + partie_b + ";" + vecRNE.get(i) + ";" + partie_d);
 				out_liste.newLine();
 			}
 			out_liste.close();
