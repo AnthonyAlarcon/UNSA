@@ -29,6 +29,10 @@ public class DlgBatchAjouter extends JDialog {
 	private JTable tabDep = null;
 	private DefaultTableModel tabModel_Dep;
 	
+	private JScrollPane scrollGrade = null;
+	private JTable tabGrade = null;
+	private DefaultTableModel tabModel_Grade;
+	
 	private Connection dbMySQL = null;
 	
 	public DlgBatchAjouter(Connection connMySQL, FrmBatch frmParent) {
@@ -45,9 +49,18 @@ public class DlgBatchAjouter extends JDialog {
 				"Nom"
 				};
 		
-		// --- TabModel du JTable ---
 		tabModel_Dep = (DefaultTableModel) tabDep.getModel();
 		tabModel_Dep.setColumnIdentifiers(columnNames_Dep);
+		
+		// --- Colonnes Département ---
+		String[] columnNames_Grade = {
+				"Choix",
+				"Identifiant",
+				"Designation"
+				};
+		
+		tabModel_Grade = (DefaultTableModel) tabGrade.getModel();
+		tabModel_Grade.setColumnIdentifiers(columnNames_Grade);
 		
 		// --- Remplissage des tableaux de sélection ---
 		RemplirTableau_Dep();
@@ -80,6 +93,7 @@ public class DlgBatchAjouter extends JDialog {
 			
 			
 			jContentPane.add(getScrollDep(), null);
+			jContentPane.add(getScrollGrade(), null);
 		}
 		return jContentPane;
 	}
@@ -141,6 +155,15 @@ public class DlgBatchAjouter extends JDialog {
 		return scrollDep;
 	}
 	
+	private JScrollPane getScrollGrade() {
+		if (scrollGrade == null) {
+			scrollGrade = new JScrollPane();
+			scrollGrade.setBounds(new Rectangle(430, 150, 396, 180));
+			scrollGrade.setViewportView(getTabGrade());
+		}
+		return scrollGrade;
+	}
+	
 	private JTextField getTfNomFichier() {
 		if (tfNomFichier == null) {
 			tfNomFichier = new JTextField();
@@ -191,26 +214,50 @@ public class DlgBatchAjouter extends JDialog {
 		return tabDep;
 	}
 	
-	private void RemplirTableau_Dep(){
-		try {				
+	private JTable getTabGrade() {
+		if (tabGrade == null) {
 			
-			Object[] ligne = new Object[2];
-			
-			for(int i = 30; i < 40; i++){
-				ligne[0] = Boolean.FALSE;
-				ligne[1] = String.valueOf(i);
+			// --- Personnalisation du TableModel ---
+			DefaultTableModel tableModel = new DefaultTableModel()
+			{
+				private static final long serialVersionUID = 1L;
 				
-				tabModel_Dep.addRow(ligne);
-			}
-
-		} catch (Exception ex){
-			System.out.println("### DlgBatchAjouter ### RemplirTableau_Dep " + ex.toString());
+				// --- Verrouillage des cellules du tableau sauf la première colonne ---
+				@Override
+				public boolean isCellEditable(int row, int column) {					
+					if (column == 0){
+						return true;
+					} else {
+						return false;
+					}
+				}
+			
+				// --- CheckBox sur la première colonne ---
+				@Override
+				public Class<?> getColumnClass(int columnIndex)
+				{
+					// Format Boolean sur la première colonne
+					if(columnIndex==0)
+						return Boolean.class;
+					return super.getColumnClass(columnIndex);
+				}
+			};		
+			
+			tabGrade = new JTable(tableModel);
+			tabGrade.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			tabGrade.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+			tabGrade.setColumnSelectionAllowed(false);
+			tabGrade.setRowSelectionAllowed(true);
+			tabGrade.setRowHeight(40);
+			tabGrade.setFont(new Font("Arial", Font.PLAIN, 14));
+			
 		}
+		return tabGrade;
 	}
 	
-	private void RemplirTableau_Grade(){
+	private void RemplirTableau_Dep(){
 		try {
-			String query = "SELECT FROM T_GRADE ORDER BY ";
+			String query = "SELECT numero, nom FROM T_DEPARTEMENT ORDER BY numero ";
 			
 			// --- Numéro de colonnes affichées par le tableau ---
 			int colNo = 2;
@@ -223,7 +270,47 @@ public class DlgBatchAjouter extends JDialog {
 			
 			// --- Boucle d'insertion ---
 			while(rset.next()) {
-				String[] ligne = new String[colNo];
+				Object[] ligne = new Object[colNo + 1];
+				
+				// ---
+				ligne[0] = Boolean.FALSE;
+				
+				for(int i = 0; i < colNo; i++){
+					cellValue = rset.getString(i+1);
+					
+					if (cellValue==null){
+						cellValue = "";
+					}
+					
+					ligne[i+1] = cellValue;
+				}
+				
+				// --- Ajout de la ligne au tableau ---
+				tabModel_Dep.addRow(ligne);
+			}
+		} catch (Exception ex){
+			System.out.println("### DlgBatchAjouter ### RemplirTableau_Dep " + ex.toString());
+		}
+	}
+	
+	private void RemplirTableau_Grade(){
+		try {
+			String query = "SELECT id, designation FROM T_GRADE ORDER BY id";
+			
+			// --- Numéro de colonnes affichées par le tableau ---
+			int colNo = 2;
+			
+			// --- Recordset ---
+			Statement stmt = dbMySQL.createStatement();
+			ResultSet rset = stmt.executeQuery(query);
+						
+			String cellValue = "";
+			
+			// --- Boucle d'insertion ---
+			while(rset.next()) {
+				Object[] ligne = new Object[colNo + 1];
+				
+				ligne[0] = Boolean.FALSE;
 				
 				for(int i = 0; i < colNo; i++){
 					cellValue = rset.getString(i+1);
@@ -232,11 +319,11 @@ public class DlgBatchAjouter extends JDialog {
 						cellValue = "";
 					}
 										
-					ligne[i] = cellValue;
+					ligne[i+1] = cellValue;
 				}
 				
 				// --- Ajout de la ligne au tableau ---
-				tabModel_Dep.addRow(ligne);
+				tabModel_Grade.addRow(ligne);
 			}
 		} catch (Exception ex){
 			System.out.println("### DlgBatchAjouter ### RemplirTableau_Grade " + ex.toString());

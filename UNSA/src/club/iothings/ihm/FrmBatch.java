@@ -48,7 +48,7 @@ public class FrmBatch extends JFrame {
 		dbMySQL = connMySQL;
 		
 		//----- Répertoire de destination des fichiers compilés -----
-		tfEmplacement.setText("C:/Fichiers_Rectorat/Etablissements/");
+		tfEmplacement.setText("C:/Fichiers_Rectorat/Batch/");
 		
 		
 		String[] columnNames = {

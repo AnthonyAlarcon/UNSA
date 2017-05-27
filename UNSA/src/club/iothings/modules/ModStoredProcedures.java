@@ -100,5 +100,25 @@ public class ModStoredProcedures {
 		}
 		return resultat;
 	}
+	
+	public String sp_Departement_ajouter(String strNumero, String strNom){	
+
+		String resultat = "";
+		
+		try {
+			CallableStatement stmt = null;
+			stmt = dbMySQL.prepareCall("{call pm_departement_ajouter(?,?)}");					
+			stmt.setString("inumero", strNumero);
+			stmt.setString("inom", strNom);
+			stmt.execute();
+			
+			resultat = "OK";
+			
+		} catch(Exception ex) {
+			resultat = "ERREUR";
+			System.out.println("### ModStoredProcedure ### sp_Departement_ajouter ### " + ex.toString());
+		}
+		return resultat;
+	}
 
 }

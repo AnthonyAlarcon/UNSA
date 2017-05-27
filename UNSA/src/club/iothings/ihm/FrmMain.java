@@ -321,6 +321,7 @@ public class FrmMain extends JFrame {
 											
 											proc.sp_Grade_Ajouter(grade, "VIDE", "VIDE");
 											proc.sp_UAI_ajouter(uai_occupation, "VIDE", departement, academie, type_uai, "VIDE");
+											proc.sp_Departement_ajouter(departement, "VIDE");
 										}
 										
 										//----- Mise à jour du témoin de progression -----
@@ -364,7 +365,7 @@ public class FrmMain extends JFrame {
 		try {
 			
 			if (strInput.length()>=3){
-				resultat = strInput.substring(1,3);
+				resultat = strInput.substring(0,3);
 			} else {
 				resultat = "ERREUR";
 			}
