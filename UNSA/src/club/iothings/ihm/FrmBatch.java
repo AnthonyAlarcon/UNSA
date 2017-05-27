@@ -31,6 +31,8 @@ public class FrmBatch extends JFrame {
 	private JButton btnSupprimer = null;
 	private JButton btnReset = null;
 	
+	private JLabel labTitre = null;
+	
 	private JLabel labEmplacement = null;
 	private JTextField tfEmplacement = null;
 	
@@ -121,7 +123,7 @@ public class FrmBatch extends JFrame {
 			jContentPane_haut.add(getTfEmplacement(), null);
 			
 			labEmplacement = new JLabel();
-			labEmplacement.setBounds(new Rectangle(24, 89, 100, 30));
+			labEmplacement.setBounds(new Rectangle(24, 112, 100, 30));
 			labEmplacement.setFont(new Font("Arial", Font.PLAIN, 14));
 			labEmplacement.setText("Emplacement");
 			jContentPane_haut.add(labEmplacement, null);
@@ -129,10 +131,16 @@ public class FrmBatch extends JFrame {
 			jContentPane_haut.add(getTfPrefixe(), null);
 			
 			labPrefixe = new JLabel();
-			labPrefixe.setBounds(new Rectangle(24, 48, 100, 30));
+			labPrefixe.setBounds(new Rectangle(24, 71, 100, 30));
 			labPrefixe.setFont(new Font("Arial", Font.PLAIN, 14));
 			labPrefixe.setText("Préfixe");
 			jContentPane_haut.add(labPrefixe, null);
+			
+			labTitre = new JLabel();
+			labTitre.setBounds(new Rectangle(20, 20, 600, 40));
+			labTitre.setFont(new Font("Arial", Font.BOLD, 24));
+			labTitre.setText("Créer un batch de fichiers");
+			jContentPane_haut.add(labTitre, null);
 			
 		}
 		return jContentPane_haut;
@@ -151,7 +159,7 @@ public class FrmBatch extends JFrame {
 		if (tfEmplacement == null) {
 			tfEmplacement = new JTextField();
 			tfEmplacement.setFont(new Font("Arial", Font.PLAIN, 14));
-			tfEmplacement.setBounds(new Rectangle(134, 89, 286, 30));
+			tfEmplacement.setBounds(new Rectangle(134, 112, 286, 30));
 		}
 		return tfEmplacement;
 	}
@@ -160,7 +168,7 @@ public class FrmBatch extends JFrame {
 		if (tfPrefixe == null) {
 			tfPrefixe = new JTextField();
 			tfPrefixe.setFont(new Font("Arial", Font.PLAIN, 14));
-			tfPrefixe.setBounds(new Rectangle(134, 48, 286, 30));
+			tfPrefixe.setBounds(new Rectangle(134, 71, 286, 30));
 		}
 		return tfPrefixe;
 	}
@@ -169,7 +177,7 @@ public class FrmBatch extends JFrame {
 		if (btnLancer == null) {			
 			btnLancer = new JButton("Lancer");
 			btnLancer.setFont(new Font("Arial", Font.PLAIN, 14));
-			btnLancer.setBounds(new Rectangle(974, 139, 200, 50));
+			btnLancer.setBounds(new Rectangle(974, 159, 200, 30));
 			btnLancer.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					
@@ -242,7 +250,7 @@ public class FrmBatch extends JFrame {
 		if (btnAjouter == null) {			
 			btnAjouter = new JButton("Ajouter");
 			btnAjouter.setFont(new Font("Arial", Font.PLAIN, 14));
-			btnAjouter.setBounds(new Rectangle(10, 139, 200, 50));
+			btnAjouter.setBounds(new Rectangle(10, 159, 200, 30));
 			btnAjouter.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					
@@ -262,7 +270,7 @@ public class FrmBatch extends JFrame {
 		if (btnSupprimer == null) {			
 			btnSupprimer = new JButton("Supprimer");
 			btnSupprimer.setFont(new Font("Arial", Font.PLAIN, 14));
-			btnSupprimer.setBounds(new Rectangle(220, 139, 200, 50));
+			btnSupprimer.setBounds(new Rectangle(220, 159, 200, 30));
 			btnSupprimer.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					
@@ -277,7 +285,7 @@ public class FrmBatch extends JFrame {
 		if (btnReset == null) {			
 			btnReset = new JButton("Reset");
 			btnReset.setFont(new Font("Arial", Font.PLAIN, 14));
-			btnReset.setBounds(new Rectangle(430, 139, 200, 50));
+			btnReset.setBounds(new Rectangle(430, 159, 200, 30));
 			btnReset.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					

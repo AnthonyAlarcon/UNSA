@@ -251,6 +251,10 @@ public class FrmMain extends JFrame {
 									//----- Chargement du fichier en mémoire -----
 									while(ligne != null){
 										
+										// --- Cas #1 : "ANT;CTA" ---
+										// ---> Utilisation du caractère de séparation dans les données du fichier. Pré-traitement nécessaire 
+										ligne = ligne.replace("ANT;CTA", "ANT-CTA");
+																				
 										vecLignes.add(ligne);
 										count_lignes = count_lignes + 1;
 										
@@ -284,31 +288,20 @@ public class FrmMain extends JFrame {
 										
 										String splitarray[] = vecLignes.get(i).split(";");
 										
-										nom_usage = splitarray[imp_csv.getInd_NomUsuel()];
-										//System.out.println(">> " + nom_usage);
-										
+										nom_usage = splitarray[imp_csv.getInd_NomUsuel()];										
 										prenom = splitarray[imp_csv.getInd_Prenom()];
-										//System.out.println(">> " + prenom);
-										
 										adresse_mail = splitarray[imp_csv.getInd_AdresseMail()];
-										//System.out.println(">> " + adresse_mail);
-										
 										academie = splitarray[imp_csv.getInd_Academie()];
-										//System.out.println(">> " + academie);
-										
 										uai_occupation = splitarray[imp_csv.getInd_UaiOccupation()];
-										//System.out.println(">> " + uai_occupation);
-										
 										departement = IsolerDepartement(uai_occupation);
-										
 										type_uai = splitarray[imp_csv.getInd_TypeUai()];
-										//System.out.println(">> " + type_uai);
 										
+										// --- Traitement final du cas #1 : "ANT;CTA" ---
 										grade = splitarray[imp_csv.getInd_Grade()];
-										//System.out.println(">> " + grade);
-										
+										grade = grade.replaceAll("\"", "");
+
 										ccp = splitarray[imp_csv.getInd_Ccp()];
-										//System.out.println(">> " + ccp);
+										
 						
 										//----- ByPass de la ligne d'entête du fichier CSV -----
 										if (i > 0){
