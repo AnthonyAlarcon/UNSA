@@ -251,7 +251,7 @@ public class FrmBatch extends JFrame {
 				// --- Verrouillage des cellules du tableau ---
 				@Override
 				public boolean isCellEditable(int row, int column) {					
-					return true;
+					return false;
 				}
 			};
 			
