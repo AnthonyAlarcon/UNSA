@@ -7,50 +7,46 @@ import java.io.OutputStreamWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-
-import club.iothings.ihm.DlgExtractions;
 import club.iothings.modules.ModFonctions;
 
 public class FcnExportFiltres {
 
 	private Connection dbMySQL = null;
 	private String emplacement = "";
-	private String nom_fichier = "";
-	private DlgExtractions parent = null;
 	
 	private ModFonctions fct = null;
 	
-	private String departement = "";
-	private String grade = "";
-	private String type_uai = "";
-	private String ccp = "";
 	
-	
-	public FcnExportFiltres(Connection connMySQL, String strEmplacement, String strNomFichier, String strDepartement, String strGrade, String strTypeUAI, String strCCP, DlgExtractions frmParent){
+	public FcnExportFiltres(Connection connMySQL, String strEmplacement){
 		
-		//----- Affectation des paramètres -----
+		// --- Affectation des valeurs ---
 		dbMySQL = connMySQL;
 		emplacement = strEmplacement;
-		nom_fichier = strNomFichier;
-		parent = frmParent;
-		fct = new ModFonctions();
 		
-		departement = strDepartement.trim();
-		grade = strGrade.trim();
-		type_uai = strTypeUAI.trim();
-		ccp = strCCP.trim();
+		// --- Initialisation du module de fonctions ---
+		fct = new ModFonctions();
 	}
 	
-	public String start(){
+	public String start(String strNomFichier, String strDepartement, String strGrade, String strTypeUAI, String strCCP, String strGroupe){
+		
 		String resultat = "";
 		
+		//----- Affectation des paramètres -----
+		String nom_fichier = strNomFichier.trim();
+		String departement = strDepartement.trim();
+		String grade = strGrade.trim();
+		String type_uai = strTypeUAI.trim();
+		String ccp = strCCP.trim();
+		String groupe = strGroupe.trim();
+		
+		// --- Variables utilisées pour les filtres ---
+		String filtre_dep = "";
+		String filtre_grade = "";
+		String filtre_typeUAI = "";
+		String filtre_CCP = "";
+		String filtre_groupe = "";
+		
 		try {
-			
-			String filtre_dep = "";
-			String filtre_grade = "";
-			String filtre_typeUAI = "";
-			String filtre_CCP = "";
-			
 			
 			// --- Filtre Département ---
 			if (departement.compareTo("")!=0){
@@ -72,11 +68,16 @@ public class FcnExportFiltres {
 				filtre_CCP = " AND D.ccp IN (" + fct.MEF_Query_ValuesIn(ccp, ";") + ")";
 			}
 			
+			//--- Filtre CCP ---
+			if (groupe.compareTo("")!=0){
+				filtre_CCP = " AND U.groupe IN (" + fct.MEF_Query_ValuesIn(groupe, ";") + ")";
+			}
+			
 			
 			// --- Query ---
-			String query_mail = "SELECT D.adresse_mail FROM T_DATA D, T_UAI U WHERE D.uai_occupation = U.id " + filtre_grade + filtre_dep + filtre_typeUAI + filtre_CCP + " ORDER BY adresse_mail";
+			String query_mail = "SELECT D.adresse_mail FROM T_DATA D, T_UAI U WHERE D.uai_occupation = U.id " + filtre_grade + filtre_dep + filtre_typeUAI + filtre_CCP + filtre_groupe + " ORDER BY adresse_mail";
 			
-			System.out.println("<FcnExportFiltres><start> Query " + query_mail);
+			System.out.println("<FcnExportFiltres><start> Query = " + query_mail);
 			
 			Statement stmt_mail = dbMySQL.createStatement();
 			ResultSet rset_mail = stmt_mail.executeQuery(query_mail);
@@ -92,7 +93,10 @@ public class FcnExportFiltres {
 				}
 				out.close();
 				
-				System.out.println("<FcnExportFiltres><start> Compilation OK");
+				// --- Resultat OK ---
+				resultat = "OK";
+				
+				System.out.println("<FcnExportFiltres><start> Compilation " + nom_fichier + " : OK");
 				
 			} catch (IOException ioex) {
 				System.out.println("### FcnExportFiltres ### start ### Compilation " + ioex.toString());
