@@ -190,7 +190,7 @@ public class FrmBatch extends JFrame {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					
 					// --- Ouverture ---
-					DlgBatchAjouter ajouter = new DlgBatchAjouter(FrmBatch.this);
+					DlgBatchAjouter ajouter = new DlgBatchAjouter(dbMySQL, FrmBatch.this);
 					ajouter.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 					ajouter.setModalityType(ModalityType.APPLICATION_MODAL);
 					ajouter.setLocationRelativeTo(null);

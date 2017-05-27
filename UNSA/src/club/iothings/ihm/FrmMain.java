@@ -35,6 +35,7 @@ public class FrmMain extends JFrame {
 	private JButton btnConnexion = null;
 	private JButton btnImporter = null;
 	private JButton btnExtractions = null;
+	private JButton btnBatch = null;
 	
 	private JLabel labTitre = null;
 	private JLabel labVersion = null;
@@ -83,6 +84,7 @@ public class FrmMain extends JFrame {
 			jContentPane.add(getBtnConnexion(), null);
 			jContentPane.add(getBtnImporter(), null);
 			jContentPane.add(getBtnExtraction(), null);
+			jContentPane.add(getBtnBatch(), null);
 			jContentPane.add(getScrollMessages(), null);
 			
 			labTitre = new JLabel();
@@ -147,6 +149,7 @@ public class FrmMain extends JFrame {
 						btnConnexion.setEnabled(false);
 						btnImporter.setEnabled(true);
 						btnExtractions.setEnabled(true);
+						btnBatch.setEnabled(true);
 						
 						addLogView("Connexion à la base de données " + data.getDbName() + " : OK");
 						
@@ -179,6 +182,24 @@ public class FrmMain extends JFrame {
 			});
 		}
 		return btnExtractions;
+	}
+	
+	private JButton getBtnBatch() {
+		if (btnBatch == null) {			
+			btnBatch = new JButton("Batch");
+			btnBatch.setFont(new Font("Arial", Font.PLAIN, 14));
+			btnBatch.setBounds(new Rectangle(474, 511, 200, 50));
+			btnBatch.setEnabled(false);
+			btnBatch.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {			
+					
+					FrmBatch batch = new FrmBatch(dbMySQL);
+					batch.setLocationRelativeTo(null);
+					batch.setVisible(true);
+				}
+			});
+		}
+		return btnBatch;
 	}
 	
 	private JButton getBtnImporter() {
