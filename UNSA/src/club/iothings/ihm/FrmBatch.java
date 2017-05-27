@@ -17,8 +17,8 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-
 import club.iothings.fonctions.FcnExportFiltres;
+import club.iothings.modules.ModCellRendererBatch;
 
 public class FrmBatch extends JFrame {
 
@@ -243,12 +243,12 @@ public class FrmBatch extends JFrame {
 	private JTable getTabBatch() {
 		if (tabBatch == null) {
 			
-			//Paramétrage pour les check box
+			// --- Personnalisation du TableModel ---
 			DefaultTableModel tableModel = new DefaultTableModel()
 			{
 				private static final long serialVersionUID = 1L;
 				
-				// Verrouillage des cellules
+				// --- Verrouillage des cellules du tableau ---
 				@Override
 				public boolean isCellEditable(int row, int column) {					
 					return true;
@@ -262,6 +262,9 @@ public class FrmBatch extends JFrame {
 			tabBatch.setRowSelectionAllowed(true);
 			tabBatch.setRowHeight(40);
 			tabBatch.setFont(new Font("Arial", Font.PLAIN, 14));
+			
+			// --- Personnalisation de l'affichage --- 
+			tabBatch.setDefaultRenderer(Object.class, new ModCellRendererBatch());
 			
 			// Action Clic
 //			tabBatch.addMouseListener(new java.awt.event.MouseAdapter() {
