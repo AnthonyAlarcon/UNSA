@@ -4,10 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -15,7 +11,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
 import club.iothings.fonctions.FcnExportEtablissement;
@@ -23,7 +18,6 @@ import club.iothings.fonctions.FcnExportFiltres;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JList;
 
 
 public class DlgExtractions extends JDialog {
@@ -48,32 +42,21 @@ public class DlgExtractions extends JDialog {
 	
 	private JLabel labTypeUAI = new JLabel();
 	private JLabel labCCP = new JLabel();
-	
-	private JScrollPane scrollGrade = null;
-	private JList<String> listGrade = null;
-	private DefaultListModel<String> modelGrade = null;
-	
-	private JTextField tfEmplacement_Cat = null;
-	
-	
+		
 	private JButton btnFiltres = null;
 	private JTextField tfDepartement = null;
 	private JTextField tfGrade = null;
 	private JTextField tfTypeUAI = null;
 	private JTextField tfCCP = null;
 	
-	private JButton btnCategorie = null;
-	
 	private JButton btnFermer = null;
 	
 	private JLabel labTitre = null;
 	private JLabel labEtablissement = null;
-	private JLabel labCategorie = null;
 	private JLabel labGrade = null;
 	private JLabel labDepartement = null;
 	
 	private JProgressBar progressEtablissement = null;
-	private JProgressBar progressCategorie = null;
 	
 	private Connection dbMySQL = null;
 	
@@ -89,10 +72,7 @@ public class DlgExtractions extends JDialog {
 		
 		//----- Répertoire de destination des fichiers compilés -----
 		tfEmplacement_Etab.setText("C:/Fichiers_Rectorat/Etablissements/");
-		
-		
-		remplirListeGrade();
-		
+				
 	}
 	
 	private void initialize() {
@@ -109,10 +89,6 @@ public class DlgExtractions extends JDialog {
 			jContentPane.add(getTfEmplacement_Etab(), null);
 			jContentPane.add(getBtnEtablissement(), null);
 			jContentPane.add(getProgressEtablissement(), null);
-			
-			jContentPane.add(getTfEmplacement_Cat(), null);
-			jContentPane.add(getBtnCategorie(), null);
-			jContentPane.add(getProgressCategorie(), null);
 			
 			jContentPane.add(getTfDepartement(), null);
 			jContentPane.add(getTfGrade(), null);
@@ -132,12 +108,6 @@ public class DlgExtractions extends JDialog {
 			labEtablissement.setFont(new Font("Arial", Font.PLAIN, 14));
 			labEtablissement.setText("Etablissements");
 			jContentPane.add(labEtablissement, null);
-			
-			labCategorie = new JLabel();
-			labCategorie.setBounds(new Rectangle(20, 140, 100, 30));
-			labCategorie.setFont(new Font("Arial", Font.PLAIN, 14));
-			labCategorie.setText("Catégorie");
-			jContentPane.add(labCategorie, null);
 			
 			labDepartement = new JLabel();
 			labDepartement.setBounds(new Rectangle(20, 250, 100, 30));
@@ -261,41 +231,6 @@ public class DlgExtractions extends JDialog {
 		return btnEtablissement;
 	}
 	
-	private JButton getBtnCategorie() {
-		if (btnCategorie == null) {			
-			btnCategorie = new JButton("Compiler");
-			btnCategorie.setFont(new Font("Arial", Font.PLAIN, 14));
-			btnCategorie.setBounds(new Rectangle(430, 140, 153, 30));
-			btnCategorie.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {					
-					
-					Thread thread_export_categorie = new Thread() {
-						public void run() {
-									
-//							String prefixe = "liste.UNSA EDUCATION Montpellier.";
-//							
-//							process_running = true;
-//							btnEtablissement.setEnabled(false);
-//							tfEmplacement_Etab.setEnabled(false);
-//							
-//							FcnExportEtablissement etab = new FcnExportEtablissement(dbMySQL, tfEmplacement_Cat.getText(), prefixe, DlgExtractions.this);
-//							etab.start();
-//							
-//							btnEtablissement.setEnabled(true);
-//							tfEmplacement_Etab.setEnabled(true);
-//							process_running = false;
-						}
-					};
-					
-					//----- Lancement du thread -----
-					thread_export_categorie.setDaemon(true);
-					thread_export_categorie.start();
-				}
-			});
-		}
-		return btnCategorie;
-	}
-	
 	private JButton getBtnFiltres() {
 		if (btnFiltres == null) {			
 			btnFiltres = new JButton("Filtres");
@@ -370,15 +305,6 @@ public class DlgExtractions extends JDialog {
 		return tfEmplacement_Etab;
 	}
 	
-	private JTextField getTfEmplacement_Cat() {
-		if (tfEmplacement_Cat == null) {
-			tfEmplacement_Cat = new JTextField();
-			tfEmplacement_Cat.setFont(new Font("Arial", Font.PLAIN, 14));
-			tfEmplacement_Cat.setBounds(new Rectangle(130, 141, 290, 30));
-		}
-		return tfEmplacement_Cat;
-	}
-	
 	private JTextField getTfDepartement() {
 		if (tfDepartement == null) {
 			tfDepartement = new JTextField();
@@ -426,18 +352,6 @@ public class DlgExtractions extends JDialog {
 			progressEtablissement.setForeground(Color.getHSBColor(0.5833f, 0.80f, 1.00f));
 		}
 		return progressEtablissement;
-	}
-	
-	private JProgressBar getProgressCategorie() {
-		if (progressCategorie == null) {
-			progressCategorie = new JProgressBar();
-			progressCategorie.setFont(new Font("Arial", Font.PLAIN, 14));
-			progressCategorie.setBounds(600, 140, 150, 30);
-			progressCategorie.setStringPainted(true);
-			progressCategorie.setString("%");
-			progressCategorie.setForeground(Color.getHSBColor(0.5833f, 0.80f, 1.00f));
-		}
-		return progressCategorie;
 	}
 	
 	public void updatePbEtablissementMax(int valeurMax){
@@ -502,31 +416,4 @@ public class DlgExtractions extends JDialog {
 		return taPartieD;
 	}
 	
-//	private JList<String> getListGrade() {
-//		if (listGrade == null) {
-//			listGrade = new JList<String>(modelGrade);
-//			listGrade.setFont(new Font("Arial", Font.PLAIN, 14));
-//			listGrade.setCellRenderer(new CheckboxListRenderer());
-//			listGrade.setSelectionMode(ListSelectionModel.);
-//		}
-//		return listGrade;
-//	}
-	
-	private void remplirListeGrade(){
-		try {
-			
-			//--- SQL ---
-			String query_grade = "SELECT id from T_GRADE ORDER BY id";			
-			
-			Statement stmt_grade = dbMySQL.createStatement();
-			ResultSet rset_grade = stmt_grade.executeQuery(query_grade);
-			
-			while (rset_grade.next()){
-				modelGrade.addElement(rset_grade.getString(1));
-			}
-			
-		} catch (Exception ex){
-			System.out.println("### " + ex.toString());
-		}
-	}
 }

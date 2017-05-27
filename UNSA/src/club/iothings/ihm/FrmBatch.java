@@ -5,6 +5,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.Dialog.ModalityType;
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.sql.Connection;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -31,6 +34,9 @@ public class FrmBatch extends JFrame {
 	private JLabel labEmplacement = null;
 	private JTextField tfEmplacement = null;
 	
+	private JLabel labPrefixe = null;
+	private JTextField tfPrefixe = null;
+	
 	private JPanel jContentPane_haut = null;
 	private JPanel jContentPane_bas = null;
 	
@@ -40,15 +46,29 @@ public class FrmBatch extends JFrame {
 	
 	private Connection dbMySQL = null;
 	
+	private String partie_A = "";
+	private String partie_B = "";
+	//private String partie_C = "";
+	private String partie_D = "";
+	
 	public FrmBatch(Connection connMySQL) {
 		super();
 		initialize();
 		
-		//----- Affectation de la connection à la base de données -----
+		// --- Partie A, B, C et D ---
+		partie_A = "UNSA Montpellier";
+		partie_B = "UNSA-EDUCATION Montpellier";
+		//partie_C = "";
+		partie_D = "unsa-education.syndicat@ac-montpellier.fr,lrmp@unsa-education.org,frederic.vaysse@unsa.org,francoise.parrini@se-unsa.org,gilles,tena@gmail.com";
+		
+		// --- Affectation de la connection à la base de données ---
 		dbMySQL = connMySQL;
 		
-		//----- Répertoire de destination des fichiers compilés -----
+		// --- Répertoire de destination des fichiers compilés ---
 		tfEmplacement.setText("C:/Fichiers_Rectorat/Batch/");
+		
+		// --- Préfixe utilisé dans le nom des fichiers ---
+		tfPrefixe.setText("liste." + partie_B + ".");
 		
 		
 		String[] columnNames = {
@@ -77,8 +97,8 @@ public class FrmBatch extends JFrame {
 	}
 	
 	private void initialize() {
-		this.setSize(1200, 768);
-		this.setMinimumSize(new Dimension(1200, 768));
+		this.setSize(1200, 600);
+		this.setMinimumSize(new Dimension(1200, 600));
 		this.setTitle("Batch - UNSA");
 		
 		getContentPane().add(getScrollBatch(), BorderLayout.CENTER);
@@ -106,6 +126,14 @@ public class FrmBatch extends JFrame {
 			labEmplacement.setText("Emplacement");
 			jContentPane_haut.add(labEmplacement, null);
 			
+			jContentPane_haut.add(getTfPrefixe(), null);
+			
+			labPrefixe = new JLabel();
+			labPrefixe.setBounds(new Rectangle(24, 48, 100, 30));
+			labPrefixe.setFont(new Font("Arial", Font.PLAIN, 14));
+			labPrefixe.setText("Préfixe");
+			jContentPane_haut.add(labPrefixe, null);
+			
 		}
 		return jContentPane_haut;
 	}
@@ -128,6 +156,15 @@ public class FrmBatch extends JFrame {
 		return tfEmplacement;
 	}
 	
+	private JTextField getTfPrefixe() {
+		if (tfPrefixe == null) {
+			tfPrefixe = new JTextField();
+			tfPrefixe.setFont(new Font("Arial", Font.PLAIN, 14));
+			tfPrefixe.setBounds(new Rectangle(134, 48, 286, 30));
+		}
+		return tfPrefixe;
+	}
+	
 	private JButton getBtnLancer() {
 		if (btnLancer == null) {			
 			btnLancer = new JButton("Lancer");
@@ -137,6 +174,7 @@ public class FrmBatch extends JFrame {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					
 					String emplacement = tfEmplacement.getText();
+					String prefixe = tfPrefixe.getText();
 					
 					FcnExportFiltres filt = new FcnExportFiltres(dbMySQL, emplacement);
 					
@@ -165,10 +203,29 @@ public class FrmBatch extends JFrame {
 							groupe = tabModel.getValueAt(i, 5).toString();
 							
 							// --- Résultat du traitement ---
-							resultat = filt.start(nom_fichier, departement, grade, type_uai, ccp, groupe);
+							resultat = filt.start(prefixe + nom_fichier, departement, grade, type_uai, ccp, groupe);
 							
 							// --- Renvoi du résultat du traitement dans le tableau ---
 							tabModel.setValueAt(resultat, i, 6);
+						}
+						
+						try {
+							
+							// --- Création de la liste récapitulative ---
+							BufferedWriter out_liste = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(emplacement + "liste.csv"), "UTF-8"));
+							
+							for (int i=0; i < tabModel.getRowCount(); i++){
+								
+								// --- Affectation des valeurs contenues dans le tableau ---
+								nom_fichier = tabModel.getValueAt(i, 0).toString();
+								
+								out_liste.write(partie_A + ";" + partie_B + ";" + nom_fichier + ";" + partie_D);
+								out_liste.newLine();
+							}
+							out_liste.close();
+							
+						} catch (Exception ex){
+							System.out.println("### FrmBatch ### getBtnLancer # Liste de la liste " + ex.toString());
 						}
 						
 					} else {
