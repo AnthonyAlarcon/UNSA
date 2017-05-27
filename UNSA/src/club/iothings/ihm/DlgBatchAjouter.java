@@ -1,7 +1,9 @@
 package club.iothings.ihm;
 
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -14,6 +16,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+
+import club.iothings.modules.ModCellRendererBatch;
+import club.iothings.modules.ModCellRendererCriteres;
 
 public class DlgBatchAjouter extends JDialog {
 
@@ -332,8 +337,18 @@ public class DlgBatchAjouter extends JDialog {
 			tabDep.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 			tabDep.setColumnSelectionAllowed(false);
 			tabDep.setRowSelectionAllowed(true);
-			tabDep.setRowHeight(40);
-			tabDep.setFont(new Font("Arial", Font.PLAIN, 14));
+			tabDep.setRowHeight(20);
+			tabDep.setFont(new Font("Arial", Font.PLAIN, 12));
+			
+			// --- Personnalisation de l'affichage --- 
+			tabDep.setDefaultRenderer(Object.class, new ModCellRendererCriteres());
+			
+			// --- Rafaîchissement de la mise en forme sur clic ---
+			tabDep.addMouseListener(new java.awt.event.MouseAdapter() {
+				public void mouseClicked(java.awt.event.MouseEvent e) {
+					tabModel_Dep.fireTableDataChanged();
+				}
+			});
 			
 		}
 		return tabDep;
@@ -373,8 +388,18 @@ public class DlgBatchAjouter extends JDialog {
 			tabGrade.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 			tabGrade.setColumnSelectionAllowed(false);
 			tabGrade.setRowSelectionAllowed(true);
-			tabGrade.setRowHeight(40);
-			tabGrade.setFont(new Font("Arial", Font.PLAIN, 14));
+			tabGrade.setRowHeight(20);
+			tabGrade.setFont(new Font("Arial", Font.PLAIN, 12));
+			
+			// --- Personnalisation de l'affichage --- 
+			tabGrade.setDefaultRenderer(Object.class, new ModCellRendererCriteres());
+			
+			// --- Rafaîchissement de la mise en forme sur clic ---
+			tabGrade.addMouseListener(new java.awt.event.MouseAdapter() {
+				public void mouseClicked(java.awt.event.MouseEvent e) {
+					tabModel_Grade.fireTableDataChanged();
+				}
+			});
 			
 		}
 		return tabGrade;
@@ -414,8 +439,18 @@ public class DlgBatchAjouter extends JDialog {
 			tabTypeUAI.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 			tabTypeUAI.setColumnSelectionAllowed(false);
 			tabTypeUAI.setRowSelectionAllowed(true);
-			tabTypeUAI.setRowHeight(40);
-			tabTypeUAI.setFont(new Font("Arial", Font.PLAIN, 14));
+			tabTypeUAI.setRowHeight(20);
+			tabTypeUAI.setFont(new Font("Arial", Font.PLAIN, 12));
+			
+			// --- Personnalisation de l'affichage --- 
+			tabTypeUAI.setDefaultRenderer(Object.class, new ModCellRendererCriteres());
+			
+			// --- Rafaîchissement de la mise en forme sur clic ---
+			tabTypeUAI.addMouseListener(new java.awt.event.MouseAdapter() {
+				public void mouseClicked(java.awt.event.MouseEvent e) {
+					tabModel_TypeUAI.fireTableDataChanged();
+				}
+			});
 			
 		}
 		return tabTypeUAI;
@@ -455,8 +490,18 @@ public class DlgBatchAjouter extends JDialog {
 			tabCCP.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 			tabCCP.setColumnSelectionAllowed(false);
 			tabCCP.setRowSelectionAllowed(true);
-			tabCCP.setRowHeight(40);
-			tabCCP.setFont(new Font("Arial", Font.PLAIN, 14));
+			tabCCP.setRowHeight(20);
+			tabCCP.setFont(new Font("Arial", Font.PLAIN, 12));
+			
+			// --- Personnalisation de l'affichage --- 
+			tabCCP.setDefaultRenderer(Object.class, new ModCellRendererCriteres());
+			
+			// --- Rafaîchissement de la mise en forme sur clic ---
+			tabCCP.addMouseListener(new java.awt.event.MouseAdapter() {
+				public void mouseClicked(java.awt.event.MouseEvent e) {
+					tabModel_CCP.fireTableDataChanged();
+				}
+			});
 			
 		}
 		return tabCCP;
