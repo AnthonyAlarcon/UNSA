@@ -27,6 +27,8 @@ public class DlgBatchAjouter extends JDialog {
 	private JLabel labGrade = null;
 	private JLabel labTypeUAI = null;
 	private JLabel labCCP = null;
+	private JLabel labGroupe = null;
+	private JLabel labVille = null;
 	
 	private JLabel labNomFichier = null;
 	private JTextField tfNomFichier = null;
@@ -46,6 +48,14 @@ public class DlgBatchAjouter extends JDialog {
 	private JScrollPane scrollCCP = null;
 	private JTable tabCCP = null;
 	private DefaultTableModel tabModel_CCP;
+	
+	private JScrollPane scrollGroupe = null;
+	private JTable tabGroupe = null;
+	private DefaultTableModel tabModel_Groupe;
+	
+	private JScrollPane scrollVille = null;
+	private JTable tabVille = null;
+	private DefaultTableModel tabModel_Ville;
 	
 	private Connection dbMySQL = null;
 	
@@ -85,7 +95,7 @@ public class DlgBatchAjouter extends JDialog {
 		tabModel_TypeUAI = (DefaultTableModel) tabTypeUAI.getModel();
 		tabModel_TypeUAI.setColumnIdentifiers(columnNames_TypeUAI);
 		
-		// --- Colonnes TypeUAI ---
+		// --- Colonnes CCP ---
 		String[] columnNames_CCP = {
 				"Choix",
 				"CCP"
@@ -94,16 +104,35 @@ public class DlgBatchAjouter extends JDialog {
 		tabModel_CCP = (DefaultTableModel) tabCCP.getModel();
 		tabModel_CCP.setColumnIdentifiers(columnNames_CCP);
 		
+		// --- Colonnes Groupe ---
+		String[] columnNames_Groupe = {
+				"Choix",
+				"Groupe"
+				};
+		
+		tabModel_Groupe = (DefaultTableModel) tabGroupe.getModel();
+		tabModel_Groupe.setColumnIdentifiers(columnNames_Groupe);
+		
+		// --- Colonnes Ville ---
+		String[] columnNames_Ville = {
+				"Choix",
+				"Ville"
+				};
+		
+		tabModel_Ville = (DefaultTableModel) tabVille.getModel();
+		tabModel_Ville.setColumnIdentifiers(columnNames_Ville);
+		
 		// --- Remplissage des tableaux de sélection ---
 		RemplirTableau_Dep();
 		RemplirTableau_Grade();
 		RemplirTableau_TypeUAI();
 		RemplirTableau_CCP();
 		RemplirTableau_Groupe();
+		RemplirTableau_Ville();
 	}
 
 	private void initialize() {
-		this.setSize(938, 610);
+		this.setSize(1200, 610);
 		this.setContentPane(getJContentPane());
 		this.setTitle("Ajouter Batch - UNSA");
 		this.setResizable(false);
@@ -127,6 +156,8 @@ public class DlgBatchAjouter extends JDialog {
 			jContentPane.add(getScrollGrade(), null);
 			jContentPane.add(getScrollTypeUAI(), null);
 			jContentPane.add(getScrollCCP(), null);
+			jContentPane.add(getScrollGroupe(), null);
+			jContentPane.add(getScrollVille(), null);
 			
 			labDepartement = new JLabel();
 			labDepartement.setBounds(new Rectangle(24, 147, 100, 30));
@@ -135,7 +166,7 @@ public class DlgBatchAjouter extends JDialog {
 			jContentPane.add(labDepartement, null);
 			
 			labGrade = new JLabel();
-			labGrade.setBounds(new Rectangle(477, 147, 100, 30));
+			labGrade.setBounds(new Rectangle(334, 147, 100, 30));
 			labGrade.setFont(new Font("Arial", Font.PLAIN, 14));
 			labGrade.setText("Grade");
 			jContentPane.add(labGrade, null);
@@ -147,10 +178,22 @@ public class DlgBatchAjouter extends JDialog {
 			jContentPane.add(labTypeUAI, null);
 			
 			labCCP = new JLabel();
-			labCCP.setBounds(new Rectangle(477, 352, 100, 30));
+			labCCP.setBounds(new Rectangle(334, 352, 100, 30));
 			labCCP.setFont(new Font("Arial", Font.PLAIN, 14));
 			labCCP.setText("CCP");
 			jContentPane.add(labCCP, null);
+			
+			labGroupe = new JLabel();
+			labGroupe.setBounds(new Rectangle(764, 147, 100, 30));
+			labGroupe.setFont(new Font("Arial", Font.PLAIN, 14));
+			labGroupe.setText("Groupe");
+			jContentPane.add(labGroupe, null);
+			
+			labVille = new JLabel();
+			labVille.setBounds(new Rectangle(764, 352, 100, 30));
+			labVille.setFont(new Font("Arial", Font.PLAIN, 14));
+			labVille.setText("Ville");
+			jContentPane.add(labVille, null);
 		}
 		return jContentPane;
 	}
@@ -175,6 +218,7 @@ public class DlgBatchAjouter extends JDialog {
 						String cumul_typeUAI = "";
 						String cumul_CCP = "";
 						String cumul_groupe = "";
+						String cumul_ville = "";
 						
 						// --- Département ---
 						if (tabModel_Dep.getRowCount() > 0){
@@ -240,7 +284,55 @@ public class DlgBatchAjouter extends JDialog {
 							}
 						}
 						
-						parent.AjouterLigne(nom_fichier, cumul_dep, cumul_grade, cumul_typeUAI, cumul_CCP, cumul_groupe);
+						// --- Type CCP ---
+						if (tabModel_CCP.getRowCount() > 0){
+							for (int i=0; i < tabModel_CCP.getRowCount(); i++){
+								
+								choix = String.valueOf(tabCCP.getValueAt(i, 0)); 
+								
+								if (choix.compareTo("true")==0){
+									if (cumul_CCP.compareTo("")==0){
+										cumul_CCP = String.valueOf(tabCCP.getValueAt(i, 1));
+									} else {
+										cumul_CCP = cumul_CCP + ";" +  String.valueOf(tabCCP.getValueAt(i, 1));
+									}
+								}
+							}
+						}
+						
+						// --- Type Groupe ---
+						if (tabModel_Groupe.getRowCount() > 0){
+							for (int i=0; i < tabModel_Groupe.getRowCount(); i++){
+								
+								choix = String.valueOf(tabModel_Groupe.getValueAt(i, 0)); 
+								
+								if (choix.compareTo("true")==0){
+									if (cumul_groupe.compareTo("")==0){
+										cumul_groupe = String.valueOf(tabModel_Groupe.getValueAt(i, 1));
+									} else {
+										cumul_groupe = cumul_groupe + ";" +  String.valueOf(tabModel_Groupe.getValueAt(i, 1));
+									}
+								}
+							}
+						}
+						
+						// --- Type Ville ---
+						if (tabModel_Ville.getRowCount() > 0){
+							for (int i=0; i < tabModel_Ville.getRowCount(); i++){
+								
+								choix = String.valueOf(tabModel_Ville.getValueAt(i, 0)); 
+								
+								if (choix.compareTo("true")==0){
+									if (cumul_ville.compareTo("")==0){
+										cumul_ville = String.valueOf(tabModel_Ville.getValueAt(i, 1));
+									} else {
+										cumul_ville = cumul_ville + ";" +  String.valueOf(tabModel_Ville.getValueAt(i, 1));
+									}
+								}
+							}
+						}
+						
+						parent.AjouterLigne(nom_fichier, cumul_dep, cumul_grade, cumul_typeUAI, cumul_CCP, cumul_groupe, cumul_ville);
 						
 						// --- Fermeture de la fenêtre ---
 						DlgBatchAjouter.this.dispose();
@@ -257,7 +349,7 @@ public class DlgBatchAjouter extends JDialog {
 	private JScrollPane getScrollDep() {
 		if (scrollDep == null) {
 			scrollDep = new JScrollPane();
-			scrollDep.setBounds(new Rectangle(24, 188, 420, 142));
+			scrollDep.setBounds(new Rectangle(24, 188, 300, 142));
 			scrollDep.setViewportView(getTabDep());
 		}
 		return scrollDep;
@@ -266,7 +358,7 @@ public class DlgBatchAjouter extends JDialog {
 	private JScrollPane getScrollGrade() {
 		if (scrollGrade == null) {
 			scrollGrade = new JScrollPane();
-			scrollGrade.setBounds(new Rectangle(477, 188, 420, 142));
+			scrollGrade.setBounds(new Rectangle(334, 188, 420, 142));
 			scrollGrade.setViewportView(getTabGrade());
 		}
 		return scrollGrade;
@@ -275,7 +367,7 @@ public class DlgBatchAjouter extends JDialog {
 	private JScrollPane getScrollTypeUAI() {
 		if (scrollTypeUAI == null) {
 			scrollTypeUAI = new JScrollPane();
-			scrollTypeUAI.setBounds(new Rectangle(24, 393, 420, 142));
+			scrollTypeUAI.setBounds(new Rectangle(24, 393, 300, 142));
 			scrollTypeUAI.setViewportView(getTabTypeUAI());
 		}
 		return scrollTypeUAI;
@@ -284,10 +376,28 @@ public class DlgBatchAjouter extends JDialog {
 	private JScrollPane getScrollCCP() {
 		if (scrollCCP == null) {
 			scrollCCP = new JScrollPane();
-			scrollCCP.setBounds(new Rectangle(477, 393, 420, 142));
+			scrollCCP.setBounds(new Rectangle(334, 393, 420, 142));
 			scrollCCP.setViewportView(getTabCCP());
 		}
 		return scrollCCP;
+	}
+	
+	private JScrollPane getScrollGroupe() {
+		if (scrollGroupe == null) {
+			scrollGroupe = new JScrollPane();
+			scrollGroupe.setBounds(new Rectangle(764, 188, 400, 142));
+			scrollGroupe.setViewportView(getTabGroupe());
+		}
+		return scrollGroupe;
+	}
+	
+	private JScrollPane getScrollVille() {
+		if (scrollVille == null) {
+			scrollVille = new JScrollPane();
+			scrollVille.setBounds(new Rectangle(764, 393, 400, 142));
+			scrollVille.setViewportView(getTabVille());
+		}
+		return scrollVille;
 	}
 	
 	private JTextField getTfNomFichier() {
@@ -503,6 +613,108 @@ public class DlgBatchAjouter extends JDialog {
 		return tabCCP;
 	}
 	
+	private JTable getTabGroupe() {
+		if (tabGroupe == null) {
+			
+			// --- Personnalisation du TableModel ---
+			DefaultTableModel tableModel = new DefaultTableModel()
+			{
+				private static final long serialVersionUID = 1L;
+				
+				// --- Verrouillage des cellules du tableau sauf la première colonne ---
+				@Override
+				public boolean isCellEditable(int row, int column) {					
+					if (column == 0){
+						return true;
+					} else {
+						return false;
+					}
+				}
+			
+				// --- CheckBox sur la première colonne ---
+				@Override
+				public Class<?> getColumnClass(int columnIndex)
+				{
+					// Format Boolean sur la première colonne
+					if(columnIndex==0)
+						return Boolean.class;
+					return super.getColumnClass(columnIndex);
+				}
+			};		
+			
+			tabGroupe = new JTable(tableModel);
+			tabGroupe.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			tabGroupe.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+			tabGroupe.setColumnSelectionAllowed(false);
+			tabGroupe.setRowSelectionAllowed(true);
+			tabGroupe.setRowHeight(20);
+			tabGroupe.setFont(new Font("Arial", Font.PLAIN, 12));
+			
+			// --- Personnalisation de l'affichage --- 
+			tabGroupe.setDefaultRenderer(Object.class, new ModCellRendererCriteres());
+			
+			// --- Rafaîchissement de la mise en forme sur clic ---
+			tabGroupe.addMouseListener(new java.awt.event.MouseAdapter() {
+				public void mouseClicked(java.awt.event.MouseEvent e) {
+					tabModel_Groupe.fireTableDataChanged();
+				}
+			});
+			
+		}
+		return tabGroupe;
+	}
+	
+	private JTable getTabVille() {
+		if (tabVille == null) {
+			
+			// --- Personnalisation du TableModel ---
+			DefaultTableModel tableModel = new DefaultTableModel()
+			{
+				private static final long serialVersionUID = 1L;
+				
+				// --- Verrouillage des cellules du tableau sauf la première colonne ---
+				@Override
+				public boolean isCellEditable(int row, int column) {					
+					if (column == 0){
+						return true;
+					} else {
+						return false;
+					}
+				}
+			
+				// --- CheckBox sur la première colonne ---
+				@Override
+				public Class<?> getColumnClass(int columnIndex)
+				{
+					// Format Boolean sur la première colonne
+					if(columnIndex==0)
+						return Boolean.class;
+					return super.getColumnClass(columnIndex);
+				}
+			};		
+			
+			tabVille = new JTable(tableModel);
+			tabVille.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			tabVille.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+			tabVille.setColumnSelectionAllowed(false);
+			tabVille.setRowSelectionAllowed(true);
+			tabVille.setRowHeight(20);
+			tabVille.setFont(new Font("Arial", Font.PLAIN, 12));
+			
+			// --- Personnalisation de l'affichage --- 
+			tabVille.setDefaultRenderer(Object.class, new ModCellRendererCriteres());
+			
+			// --- Rafaîchissement de la mise en forme sur clic ---
+			tabVille.addMouseListener(new java.awt.event.MouseAdapter() {
+				public void mouseClicked(java.awt.event.MouseEvent e) {
+					tabModel_Ville.fireTableDataChanged();
+				}
+			});
+			
+		}
+		return tabVille;
+	}
+	
 	private void RemplirTableau_Dep(){
 		try {
 			String query = "SELECT numero, nom FROM T_DEPARTEMENT ORDER BY numero ";
@@ -653,6 +865,76 @@ public class DlgBatchAjouter extends JDialog {
 	}
 	
 	private void RemplirTableau_Groupe(){
-		
+		try {
+			String query = "SELECT groupe, COUNT(*) FROM T_UAI GROUP BY groupe ORDER BY groupe";
+			
+			// --- Numéro de colonnes affichées par le tableau ---
+			int colNo = 1;
+			
+			// --- Recordset ---
+			Statement stmt = dbMySQL.createStatement();
+			ResultSet rset = stmt.executeQuery(query);
+						
+			String cellValue = "";
+			
+			// --- Boucle d'insertion ---
+			while(rset.next()) {
+				Object[] ligne = new Object[colNo + 1];
+				
+				ligne[0] = Boolean.FALSE;
+				
+				for(int i = 0; i < colNo; i++){
+					cellValue = rset.getString(i+1);
+					
+					if (cellValue==null){
+						cellValue = "";
+					}
+										
+					ligne[i+1] = cellValue;
+				}
+				
+				// --- Ajout de la ligne au tableau ---
+				tabModel_Groupe.addRow(ligne);
+			}
+		} catch (Exception ex){
+			System.out.println("### DlgBatchAjouter ### RemplirTableau_Groupe " + ex.toString());
+		}
+	}
+	
+	private void RemplirTableau_Ville(){
+		try {
+			String query = "SELECT ville, COUNT(*) FROM T_UAI GROUP BY ville ORDER BY ville";
+			
+			// --- Numéro de colonnes affichées par le tableau ---
+			int colNo = 1;
+			
+			// --- Recordset ---
+			Statement stmt = dbMySQL.createStatement();
+			ResultSet rset = stmt.executeQuery(query);
+						
+			String cellValue = "";
+			
+			// --- Boucle d'insertion ---
+			while(rset.next()) {
+				Object[] ligne = new Object[colNo + 1];
+				
+				ligne[0] = Boolean.FALSE;
+				
+				for(int i = 0; i < colNo; i++){
+					cellValue = rset.getString(i+1);
+					
+					if (cellValue==null){
+						cellValue = "";
+					}
+										
+					ligne[i+1] = cellValue;
+				}
+				
+				// --- Ajout de la ligne au tableau ---
+				tabModel_Ville.addRow(ligne);
+			}
+		} catch (Exception ex){
+			System.out.println("### DlgBatchAjouter ### RemplirTableau_Ville " + ex.toString());
+		}
 	}
 }
