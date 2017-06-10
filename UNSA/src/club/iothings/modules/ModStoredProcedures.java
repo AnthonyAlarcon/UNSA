@@ -11,19 +11,18 @@ public class ModStoredProcedures {
 		dbMySQL = connSQL;
 	}
 	
-	public String sp_Data_Ajouter(String strNomUsuel, String strPrenom, String strAdresseMail, String strAcademie, String strUaiOccupation, String strTypeUai, String strGrade, String strCcp){	
+	public String sp_Data_Ajouter(String strNomUsuel, String strPrenom, String strAdresseMail, String strAcademie, String strUaiOccupation, String strGrade, String strCcp){	
 
 		String resultat = "";
 		
 		try {
 			CallableStatement stmt = null;
-			stmt = dbMySQL.prepareCall("{call pm_data_ajouter(?,?,?,?,?,?,?,?)}");					
+			stmt = dbMySQL.prepareCall("{call pm_data_ajouter(?,?,?,?,?,?,?)}");					
 			stmt.setString("inom_usuel", strNomUsuel);
 			stmt.setString("iprenom", strPrenom);
 			stmt.setString("iadresse_mail", strAdresseMail);
 			stmt.setString("iacademie", strAcademie);
 			stmt.setString("iuai_occupation", strUaiOccupation);
-			stmt.setString("itype_uai", strTypeUai);
 			stmt.setString("igrade", strGrade);
 			stmt.setString("iccp", strCcp);			
 			stmt.execute();
@@ -37,16 +36,16 @@ public class ModStoredProcedures {
 		return resultat;
 	}
 	
-	public String sp_Etablissement_Ajouter(String strUaiOccupation, String strTypeEtab, String strTypeEtabDetails,  String strNom, String strVille){	
+	public String sp_Etablissement_Ajouter(String strId, String strTypeUAI, String strDetailEtab,  String strNom, String strVille){	
 
 		String resultat = "";
 		
 		try {
 			CallableStatement stmt = null;
 			stmt = dbMySQL.prepareCall("{call pm_data_ajouter(?,?,?,?,?)}");
-			stmt.setString("iuai_occupation", strUaiOccupation);
-			stmt.setString("itype_etab", strTypeEtab);
-			stmt.setString("itype_etab_details", strTypeEtabDetails);
+			stmt.setString("iid", strId);
+			stmt.setString("itype_uai", strTypeUAI);
+			stmt.setString("idetail_etab", strDetailEtab);
 			stmt.setString("inom", strNom);
 			stmt.setString("iville", strVille);			
 			stmt.execute();

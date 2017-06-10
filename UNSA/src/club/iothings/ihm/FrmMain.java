@@ -305,7 +305,7 @@ public class FrmMain extends JFrame {
 						
 										//----- ByPass de la ligne d'entête du fichier CSV -----
 										if (i > 0){
-											resultat = proc.sp_Data_Ajouter(nom_usage, prenom, adresse_mail, academie, uai_occupation, type_uai, grade, ccp);
+											resultat = proc.sp_Data_Ajouter(nom_usage, prenom, adresse_mail, academie, uai_occupation, grade, ccp);
 											
 											if (resultat.compareTo("OK")!=0){
 												System.out.println("### Erreur DATA I= " + i);

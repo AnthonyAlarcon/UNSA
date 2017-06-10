@@ -1,9 +1,7 @@
 package club.iothings.ihm;
 
 import java.awt.Font;
-import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -16,8 +14,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-
-import club.iothings.modules.ModCellRendererBatch;
 import club.iothings.modules.ModCellRendererCriteres;
 
 public class DlgBatchAjouter extends JDialog {
