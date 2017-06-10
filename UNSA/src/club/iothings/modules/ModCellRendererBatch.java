@@ -16,10 +16,13 @@ public class ModCellRendererBatch extends DefaultTableCellRenderer {
 		int num_row = row;
 		int num_col = column;
 		
-		// --- On récupère le statut de la compilation ---
-		String statut_compilation = String.valueOf(table.getValueAt(num_row, 6));	
+		// --- Paramétrage ---
+		int indice_col_statut = 7;
 		
-		if (num_col == 6){
+		// --- On récupère le statut de la compilation ---
+		String statut_compilation = String.valueOf(table.getValueAt(num_row, indice_col_statut));	
+		
+		if (num_col == indice_col_statut){
 			if (statut_compilation.compareTo("OK")==0){
 				cell.setBackground(Color.green);
 				cell.setForeground(Color.white);
