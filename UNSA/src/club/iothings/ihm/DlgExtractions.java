@@ -213,8 +213,12 @@ public class DlgExtractions extends JDialog {
 							String partieC = taPartieC.getText();
 							String partieD = taPartieD.getText();
 							
+							// --- Filtres ---
+							String filtre_departement = tfDepartement.getText();
+							String filtre_type_uai = tfTypeUAI.getText();
+							
 							FcnExportEtablissement etab = new FcnExportEtablissement(dbMySQL, tfEmplacement_Etab.getText(), partieA, partieB, partieC, partieD, DlgExtractions.this);
-							etab.start();
+							etab.start(filtre_departement, filtre_type_uai);
 							
 							btnEtablissement.setEnabled(true);
 							tfEmplacement_Etab.setEnabled(true);
@@ -250,7 +254,7 @@ public class DlgExtractions extends JDialog {
 							tfCCP.setEnabled(false);
 														
 							FcnExportFiltres filtres = new FcnExportFiltres(dbMySQL, "C:/Fichiers_Rectorat/Filtres/");
-							filtres.start("ExportFiltres", tfDepartement.getText(), tfGrade.getText(), tfTypeUAI.getText(), tfCCP.getText(), "");
+							filtres.start("ExportFiltres", tfDepartement.getText(), tfGrade.getText(), tfTypeUAI.getText(), tfCCP.getText(), "", "");
 							
 							btnFiltres.setEnabled(true);
 							tfDepartement.setEnabled(true);
