@@ -80,6 +80,7 @@ public class FrmBatch extends JFrame {
 				"Type UAI",
 				"CCP",
 				"Groupe",
+				"Ville",
 				"Compilation"
 				};
 		
@@ -193,6 +194,7 @@ public class FrmBatch extends JFrame {
 					String type_uai = "";
 					String ccp = "";
 					String groupe = "";
+					String ville = "";
 					
 					String resultat = "";
 					
@@ -209,9 +211,10 @@ public class FrmBatch extends JFrame {
 							type_uai = tabModel.getValueAt(i, 3).toString();
 							ccp = tabModel.getValueAt(i, 4).toString();
 							groupe = tabModel.getValueAt(i, 5).toString();
+							ville = tabModel.getValueAt(i, 6).toString();
 							
 							// --- Résultat du traitement ---
-							resultat = filt.start(prefixe + nom_fichier, departement, grade, type_uai, ccp, groupe);
+							resultat = filt.start(prefixe + nom_fichier, departement, grade, type_uai, ccp, groupe, ville);
 							
 							// --- Renvoi du résultat du traitement dans le tableau ---
 							tabModel.setValueAt(resultat, i, 6);
@@ -379,14 +382,15 @@ public class FrmBatch extends JFrame {
 		tableau.getColumnModel().getColumn(2).setPreferredWidth(150);
 		tableau.getColumnModel().getColumn(3).setPreferredWidth(150);
 		tableau.getColumnModel().getColumn(4).setPreferredWidth(150);
-		tableau.getColumnModel().getColumn(5).setPreferredWidth(150);
-		tableau.getColumnModel().getColumn(6).setPreferredWidth(150);
+		tableau.getColumnModel().getColumn(5).setPreferredWidth(100);
+		tableau.getColumnModel().getColumn(6).setPreferredWidth(100);
+		tableau.getColumnModel().getColumn(7).setPreferredWidth(100);
 	}
 	
-	public void AjouterLigne(String strNomFichier, String strDepartement, String strGrade, String strTypeUAI, String strCCP, String strGroupe) {
+	public void AjouterLigne(String strNomFichier, String strDepartement, String strGrade, String strTypeUAI, String strCCP, String strGroupe, String strVille) {
 		
 		try {
-			String[] ligne = new String[7];
+			String[] ligne = new String[8];
 			
 			ligne[0] = strNomFichier;
 			ligne[1] = strDepartement;
@@ -394,7 +398,8 @@ public class FrmBatch extends JFrame {
 			ligne[3] = strTypeUAI;
 			ligne[4] = strCCP;
 			ligne[5] = strGroupe;
-			ligne[6] = "Non lancée";
+			ligne[6] = strVille;
+			ligne[7] = "Non lancée";
 			
 			tabModel.addRow(ligne);
 		} catch (Exception ex){
