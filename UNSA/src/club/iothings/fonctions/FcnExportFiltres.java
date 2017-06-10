@@ -27,7 +27,7 @@ public class FcnExportFiltres {
 		fct = new ModFonctions();
 	}
 	
-	public String start(String strNomFichier, String strDepartement, String strGrade, String strTypeUAI, String strCCP, String strGroupe){
+	public String start(String strNomFichier, String strDepartement, String strGrade, String strTypeUAI, String strCCP, String strGroupe, String strVille){
 		
 		String resultat = "";
 		
@@ -38,6 +38,7 @@ public class FcnExportFiltres {
 		String type_uai = strTypeUAI.trim();
 		String ccp = strCCP.trim();
 		String groupe = strGroupe.trim();
+		String ville = strVille.trim();
 		
 		// --- Variables utilisées pour les filtres ---
 		String filtre_dep = "";
@@ -45,6 +46,7 @@ public class FcnExportFiltres {
 		String filtre_typeUAI = "";
 		String filtre_CCP = "";
 		String filtre_groupe = "";
+		String filtre_ville = "";
 		
 		try {
 			
@@ -60,7 +62,7 @@ public class FcnExportFiltres {
 			
 			//--- Filtre TypeUAI ---
 			if (type_uai.compareTo("")!=0){
-				filtre_typeUAI = " AND D.type_uai IN (" + fct.MEF_Query_ValuesIn(type_uai, ";") + ")";
+				filtre_typeUAI = " AND U.type_uai IN (" + fct.MEF_Query_ValuesIn(type_uai, ";") + ")";
 			}
 			
 			//--- Filtre CCP ---
@@ -68,14 +70,19 @@ public class FcnExportFiltres {
 				filtre_CCP = " AND D.ccp IN (" + fct.MEF_Query_ValuesIn(ccp, ";") + ")";
 			}
 			
-			//--- Filtre CCP ---
+			//--- Filtre Groupe ---
 			if (groupe.compareTo("")!=0){
 				filtre_CCP = " AND U.groupe IN (" + fct.MEF_Query_ValuesIn(groupe, ";") + ")";
 			}
 			
+			//--- Filtre Ville ---
+			if (ville.compareTo("")!=0){
+				filtre_ville = " AND U.ville IN (" + fct.MEF_Query_ValuesIn(ville, ";") + ")";
+			}
+			
 			
 			// --- Query ---
-			String query_mail = "SELECT D.adresse_mail FROM T_DATA D, T_UAI U WHERE D.uai_occupation = U.id " + filtre_grade + filtre_dep + filtre_typeUAI + filtre_CCP + filtre_groupe + " ORDER BY adresse_mail";
+			String query_mail = "SELECT D.adresse_mail FROM T_DATA D, T_UAI U WHERE D.uai_occupation = U.id " + filtre_grade + filtre_dep + filtre_typeUAI + filtre_CCP + filtre_groupe + filtre_ville + " ORDER BY adresse_mail";
 			
 			System.out.println("<FcnExportFiltres><start> Query = " + query_mail);
 			
