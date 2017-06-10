@@ -36,29 +36,6 @@ public class ModStoredProcedures {
 		return resultat;
 	}
 	
-	public String sp_Etablissement_Ajouter(String strId, String strTypeUAI, String strDetailEtab,  String strNom, String strVille){	
-
-		String resultat = "";
-		
-		try {
-			CallableStatement stmt = null;
-			stmt = dbMySQL.prepareCall("{call pm_data_ajouter(?,?,?,?,?)}");
-			stmt.setString("iid", strId);
-			stmt.setString("itype_uai", strTypeUAI);
-			stmt.setString("idetail_etab", strDetailEtab);
-			stmt.setString("inom", strNom);
-			stmt.setString("iville", strVille);			
-			stmt.execute();
-			
-			resultat = "OK";
-			
-		} catch(Exception ex) {
-			resultat = "ERREUR";
-			System.out.println("### ModStoredProcedures ### sp_Etablissement_Ajouter ### " + ex.toString());
-		}
-		return resultat;
-	}
-	
 	public String sp_Data_Supprimer_Academie(String strAcademie){	
 
 		String resultat = "";
@@ -99,19 +76,20 @@ public class ModStoredProcedures {
 		return resultat;
 	}
 	
-	public String sp_UAI_ajouter(String strId, String strNom, String strDepartement, String strAcademie, String strTypeUAI, String strGroupe){	
+	public String sp_UAI_ajouter(String strId, String strNom, String strDepartement, String strAcademie, String strTypeUAI, String strGroupe, String strVille){	
 
 		String resultat = "";
 		
 		try {
 			CallableStatement stmt = null;
-			stmt = dbMySQL.prepareCall("{call pm_uai_ajouter(?,?,?,?,?,?)}");					
+			stmt = dbMySQL.prepareCall("{call pm_uai_ajouter(?,?,?,?,?,?,?)}");					
 			stmt.setString("iid", strId);
 			stmt.setString("inom", strNom);
 			stmt.setString("idepartement", strDepartement);
 			stmt.setString("iacademie", strAcademie);
 			stmt.setString("itype_uai", strTypeUAI);
 			stmt.setString("igroupe", strGroupe);
+			stmt.setString("iville", strVille);
 			stmt.execute();
 			
 			resultat = "OK";
