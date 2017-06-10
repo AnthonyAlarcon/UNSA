@@ -1,6 +1,6 @@
 package club.iothings.ihm;
 
-import club.iothings.structures.StructImportCSV;
+import club.iothings.structures.StructImportDataCSV;
 import club.iothings.data.DataConnexion;
 import club.iothings.modules.ModStoredProcedures;
 import club.iothings.modules.MonFiltre;
@@ -217,7 +217,7 @@ public class FrmMain extends JFrame {
 							try {
 								btnImporter.setEnabled(false);
 								
-								StructImportCSV imp_csv = new StructImportCSV(dbMySQL);
+								StructImportDataCSV imp_csv = new StructImportDataCSV(dbMySQL);
 								ModStoredProcedures proc = new ModStoredProcedures(dbMySQL);
 								
 								

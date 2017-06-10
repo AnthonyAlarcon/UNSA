@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class StructImportCSV {
+public class StructImportDataCSV {
 	
 	private Connection dbMySQL = null;
 	
@@ -18,7 +18,7 @@ public class StructImportCSV {
 	private int ind_grade = 0;
 	private int ind_ccp = 0;
 
-	public StructImportCSV(Connection connMySQL){
+	public StructImportDataCSV(Connection connMySQL){
 		
 		dbMySQL = connMySQL;
 	
@@ -83,7 +83,7 @@ public class StructImportCSV {
 			resultat = "OK";
 			
 		} catch (Exception ex){
-			System.out.println("### StructImportCSV ### setValues # " + ex.toString());
+			System.out.println("### StructImportDataCSV ### setValues # " + ex.toString());
 			resultat = "ERREUR";
 		}
 		

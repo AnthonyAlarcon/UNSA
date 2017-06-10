@@ -37,6 +37,29 @@ public class ModStoredProcedures {
 		return resultat;
 	}
 	
+	public String sp_Etablissement_Ajouter(String strUaiOccupation, String strTypeEtab, String strTypeEtabDetails,  String strNom, String strVille){	
+
+		String resultat = "";
+		
+		try {
+			CallableStatement stmt = null;
+			stmt = dbMySQL.prepareCall("{call pm_data_ajouter(?,?,?,?,?)}");
+			stmt.setString("iuai_occupation", strUaiOccupation);
+			stmt.setString("itype_etab", strTypeEtab);
+			stmt.setString("itype_etab_details", strTypeEtabDetails);
+			stmt.setString("inom", strNom);
+			stmt.setString("iville", strVille);			
+			stmt.execute();
+			
+			resultat = "OK";
+			
+		} catch(Exception ex) {
+			resultat = "ERREUR";
+			System.out.println("### ModStoredProcedures ### sp_Etablissement_Ajouter ### " + ex.toString());
+		}
+		return resultat;
+	}
+	
 	public String sp_Data_Supprimer_Academie(String strAcademie){	
 
 		String resultat = "";
