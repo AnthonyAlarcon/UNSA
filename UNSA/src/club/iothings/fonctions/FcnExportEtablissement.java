@@ -41,30 +41,56 @@ public class FcnExportEtablissement {
 		
 	}
 	
-	public String start(){
+	public String start(String strDepartement, String strTypeUAI){
 		String resultat = "";
 		
 		try {
 			
 			Vector<String> vecRNE = new Vector<String>();
 			String rne = "";
+			
+			Vector<String> vecVilleEtab = new Vector<String>();
+			String ville_etab = "";
+			
 			int indice = 0;
 			
+			// --- Filtre Département ---
+			String compil_filtres = "";
+			
+			if (strDepartement.compareTo("")!=0){
+				compil_filtres = "WHERE departement = '" + strDepartement + "'";
+			}
+			
+			if (strTypeUAI.compareTo("")!=0){
+				if (compil_filtres.compareTo("")!=0){
+					compil_filtres = compil_filtres + " AND type_uai = '" + strTypeUAI + "'";
+				} else {
+					compil_filtres = "WHERE type_uai = '" + strTypeUAI + "'";
+				}
+			}
+			
 			//--- SQL ---
-			String query_rne = "SELECT uai_occupation, COUNT(*) as nb FROM T_DATA GROUP BY uai_occupation ORDER BY uai_occupation";			
+			String query_rne = "SELECT id, ville, nom FROM T_UAI " + compil_filtres + " GROUP BY id ORDER BY id";	
+			
+			System.out.print(">> " + query_rne);
 			
 			Statement stmt_rne = dbMySQL.createStatement();
 			ResultSet rset_rne = stmt_rne.executeQuery(query_rne);
 			
 			while (rset_rne.next()){
 				vecRNE.add(rset_rne.getString(1));
+				vecVilleEtab.add(rset_rne.getString(2) + "_" + rset_rne.getString(3));
 			}
+			
+			System.out.print(">> " + vecRNE.size());
 			
 			parent.updatePbEtablissementValue(0);
 			parent.updatePbEtablissementMax(vecRNE.size());
 			
 			for (int i=0; i < vecRNE.size(); i++){
 				rne = vecRNE.get(i);
+				ville_etab = vecVilleEtab.get(i);
+				
 				System.out.println(i + " / RNE = " + rne);
 				
 				String query_mail = "SELECT adresse_mail FROM T_DATA WHERE uai_occupation ='" + rne + "' ORDER BY adresse_mail";
@@ -75,7 +101,7 @@ public class FcnExportEtablissement {
 				
 				try {	
 					
-					BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(emplacement + prefixe + rne + ".csv"), "UTF-8"));
+					BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(emplacement + prefixe + rne + "_" + ville_etab + ".csv"), "UTF-8"));
 					
 					while (rset_mail.next()){						
 						out.write(rset_mail.getString(1));
@@ -98,7 +124,7 @@ public class FcnExportEtablissement {
 			BufferedWriter out_liste = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(emplacement + "liste.csv"), "UTF-8"));
 			
 			for (int i=0; i < vecRNE.size(); i++){
-				out_liste.write(partie_a + ";" + partie_b + ";" + vecRNE.get(i) + ";" + partie_d);
+				out_liste.write(partie_a + ";" + partie_b + ";" + vecRNE.get(i) + "_" + vecVilleEtab.get(i) + ";" + partie_d);
 				out_liste.newLine();
 			}
 			out_liste.close();
