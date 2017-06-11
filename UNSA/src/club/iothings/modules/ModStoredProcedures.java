@@ -3,6 +3,8 @@ package club.iothings.modules;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+
 public class ModStoredProcedures {
 	
 	private static Connection dbMySQL = null;
@@ -11,7 +13,7 @@ public class ModStoredProcedures {
 		dbMySQL = connSQL;
 	}
 	
-	public String sp_Data_Ajouter(String strNomUsuel, String strPrenom, String strAdresseMail, String strAcademie, String strUaiOccupation, String strGrade, String strCcp){	
+	public String sp_Data_Ajouter(Integer ind, String strNomUsuel, String strPrenom, String strAdresseMail, String strAcademie, String strUaiOccupation, String strGrade, String strCcp){	
 
 		String resultat = "";
 		
@@ -31,7 +33,7 @@ public class ModStoredProcedures {
 			
 		} catch(Exception ex) {
 			resultat = "ERREUR";
-			System.out.println("### ModStoredProcedures ### sp_Data_Ajouter ### " + ex.toString());
+			System.out.println("### ModStoredProcedures ### sp_Data_Ajouter ### (ligne " + ind + ") " + ex.toString());
 		}
 		return resultat;
 	}
@@ -55,7 +57,28 @@ public class ModStoredProcedures {
 		return resultat;
 	}
 	
-	public String sp_Grade_Ajouter(String strId, String strDesignation, String strCategorie){	
+	public String sp_Data_SupprimerTout(){	
+
+		String resultat = "";
+		
+		try {
+			CallableStatement stmt = null;
+			stmt = dbMySQL.prepareCall("{call px_data_supprimertout}");
+			stmt.execute();
+			
+			resultat = "OK";
+			
+		} catch (MySQLIntegrityConstraintViolationException ex_primary){
+			resultat = "PRIMARY";
+			
+		} catch(Exception ex) {
+			resultat = "ERREUR";
+			System.out.println("### ModStoredProcedures ### sp_Data_SupprimerTout ###" + ex.toString());
+		}
+		return resultat;
+	}
+	
+	public String sp_Grade_Ajouter(Integer ind, String strId, String strDesignation, String strCategorie){	
 
 		String resultat = "";
 		
@@ -68,15 +91,18 @@ public class ModStoredProcedures {
 			stmt.execute();
 			
 			resultat = "OK";
+		
+		} catch (MySQLIntegrityConstraintViolationException ex_primary){
+			resultat = "PRIMARY";
 			
 		} catch(Exception ex) {
 			resultat = "ERREUR";
-			System.out.println("### ModStoredProcedures ### sp_Grade_Ajouter ### " + ex.toString());
+			System.out.println("### ModStoredProcedures ### sp_Grade_Ajouter ### (ligne " + ind + ") " + ex.toString());
 		}
 		return resultat;
 	}
 	
-	public String sp_UAI_ajouter(String strId, String strNom, String strDepartement, String strAcademie, String strTypeUAI, String strGroupe, String strVille){	
+	public String sp_UAI_ajouter(Integer ind, String strId, String strNom, String strDepartement, String strAcademie, String strTypeUAI, String strGroupe, String strVille){	
 
 		String resultat = "";
 		
@@ -94,14 +120,17 @@ public class ModStoredProcedures {
 			
 			resultat = "OK";
 			
+		} catch (MySQLIntegrityConstraintViolationException ex_primary){
+			resultat = "PRIMARY";
+			
 		} catch(Exception ex) {
 			resultat = "ERREUR";
-			System.out.println("### ModStoredProcedure ### sp_UAI_Ajouter ### " + ex.toString());
+			System.out.println("### ModStoredProcedure ### sp_UAI_Ajouter ### (ligne " + ind + ") " + ex.toString());
 		}
 		return resultat;
 	}
 	
-	public String sp_Departement_ajouter(String strNumero, String strNom){	
+	public String sp_Departement_ajouter(Integer ind, String strNumero, String strNom){	
 
 		String resultat = "";
 		
@@ -114,9 +143,12 @@ public class ModStoredProcedures {
 			
 			resultat = "OK";
 			
+		} catch (MySQLIntegrityConstraintViolationException ex_primary){
+			resultat = "PRIMARY";
+			
 		} catch(Exception ex) {
 			resultat = "ERREUR";
-			System.out.println("### ModStoredProcedure ### sp_Departement_ajouter ### " + ex.toString());
+			System.out.println("### ModStoredProcedure ### sp_Departement_ajouter ### (ligne " + ind + ") " + ex.toString());
 		}
 		return resultat;
 	}
