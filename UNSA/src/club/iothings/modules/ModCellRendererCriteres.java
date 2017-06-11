@@ -14,7 +14,6 @@ public class ModCellRendererCriteres extends DefaultTableCellRenderer {
 		Component cell = super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);	
 		
 		int num_row = row;
-		//int num_col = column;
 		
 		// --- On récupère le statut de la compilation ---
 		String choix = String.valueOf(table.getValueAt(num_row, 0));	
@@ -25,8 +24,8 @@ public class ModCellRendererCriteres extends DefaultTableCellRenderer {
 		} else {
 			cell.setBackground(Color.white);
 			cell.setForeground(Color.black);
-		}	
-	
+		}
+		
 		return cell;
 	}	
 
