@@ -217,7 +217,7 @@ public class FrmBatch extends JFrame {
 							resultat = filt.start(prefixe + nom_fichier, departement, grade, type_uai, ccp, groupe, ville);
 							
 							// --- Renvoi du résultat du traitement dans le tableau ---
-							tabModel.setValueAt(resultat, i, 6);
+							tabModel.setValueAt(resultat, i, 7);
 						}
 						
 						try {
