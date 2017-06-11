@@ -122,13 +122,15 @@ public class DlgBatchAjouter extends JDialog {
 		tabModel_Ville = (DefaultTableModel) tabVille.getModel();
 		tabModel_Ville.setColumnIdentifiers(columnNames_Ville);
 		
+		
 		// --- Remplissage des tableaux de sélection ---
-		RemplirTableau_Dep();
-		RemplirTableau_Grade();
-		RemplirTableau_TypeUAI();
-		RemplirTableau_CCP();
-		RemplirTableau_Groupe();
-		RemplirTableau_Ville();
+		RemplirTableau(tabModel_Dep, 2, "SELECT numero, nom FROM T_DEPARTEMENT ORDER BY numero");
+		RemplirTableau(tabModel_Grade, 2, "SELECT id, designation FROM T_GRADE ORDER BY id");
+		RemplirTableau(tabModel_TypeUAI, 1, "SELECT type_uai, COUNT(*) FROM T_UAI GROUP BY type_uai ORDER BY type_uai");
+		RemplirTableau(tabModel_CCP, 1, "SELECT ccp, COUNT(*) FROM T_DATA GROUP BY ccp ORDER BY ccp");
+		RemplirTableau(tabModel_Groupe, 1, "SELECT groupe, COUNT(*) FROM T_UAI GROUP BY groupe ORDER BY groupe");
+		RemplirTableau(tabModel_Ville, 1, "SELECT ville, COUNT(*) FROM T_UAI GROUP BY ville ORDER BY ville");
+		
 	}
 
 	private void initialize() {
@@ -717,7 +719,7 @@ public class DlgBatchAjouter extends JDialog {
 	
 	private void RemplirTableau_Dep(){
 		try {
-			String query = "SELECT numero, nom FROM T_DEPARTEMENT ORDER BY numero ";
+			String query = "SELECT numero, nom FROM T_DEPARTEMENT ORDER BY numero";
 			
 			// --- Numéro de colonnes affichées par le tableau ---
 			int colNo = 2;
@@ -936,5 +938,44 @@ public class DlgBatchAjouter extends JDialog {
 		} catch (Exception ex){
 			System.out.println("### DlgBatchAjouter ### RemplirTableau_Ville " + ex.toString());
 		}
+	}
+	
+	private String RemplirTableau(DefaultTableModel model, Integer nb_col, String strQuery){
+		
+		String resultat = "";
+		
+		try {
+			
+			// --- Recordset ---
+			Statement stmt = dbMySQL.createStatement();
+			ResultSet rset = stmt.executeQuery(strQuery);
+						
+			String cellValue = "";
+			
+			// --- Boucle d'insertion ---
+			while(rset.next()) {
+				Object[] ligne = new Object[nb_col + 1];
+				
+				ligne[0] = Boolean.FALSE;
+				
+				for(int i = 0; i < nb_col; i++){
+					cellValue = rset.getString(i+1);
+					
+					if (cellValue==null){
+						cellValue = "";
+					}
+										
+					ligne[i+1] = cellValue;
+				}
+				
+				// --- Ajout de la ligne au tableau ---
+				model.addRow(ligne);
+			}
+		} catch (Exception ex){
+			resultat = "ERREUR";
+			System.out.println("### DlgBatchAjouter ### RemplirTableau " + model.toString() + " " + ex.toString());
+		}
+		
+		return resultat;
 	}
 }
