@@ -130,6 +130,31 @@ public class ModStoredProcedures {
 		return resultat;
 	}
 	
+	public String sp_UAI_Maj_Infos(Integer ind, String strId, String strNom, String strGroupe, String strVille){	
+
+		String resultat = "";
+		
+		try {
+			CallableStatement stmt = null;
+			stmt = dbMySQL.prepareCall("{call pm_uai_maj_infos(?,?,?,?)}");					
+			stmt.setString("iid", strId);
+			stmt.setString("inom", strNom);
+			stmt.setString("igroupe", strGroupe);
+			stmt.setString("iville", strVille);
+			stmt.execute();
+			
+			resultat = "OK";
+			
+		} catch (MySQLIntegrityConstraintViolationException ex_primary){
+			resultat = "PRIMARY";
+			
+		} catch(Exception ex) {
+			resultat = "ERREUR";
+			System.out.println("### ModStoredProcedure ### sp_UAI_Maj_Infos ### (ligne " + ind + ") " + ex.toString());
+		}
+		return resultat;
+	}
+	
 	public String sp_Departement_ajouter(Integer ind, String strNumero, String strNom){	
 
 		String resultat = "";
