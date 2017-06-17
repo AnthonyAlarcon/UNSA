@@ -24,7 +24,6 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
-
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -226,6 +225,8 @@ public class FrmMain extends JFrame {
 						
 						try {
 							
+							addLogView("*** Démarrage Maj UAI ***");
+							
 							String emplacement = fc.getSelectedFile().getPath();
 							FileInputStream fileExcel = new FileInputStream(emplacement);
 							
@@ -242,14 +243,18 @@ public class FrmMain extends JFrame {
 							String groupe = "";
 							String ville = "";
 							
-							// ---
-							for (int i=0; i<maxRows; i++){
+							addLogView("Nombre de lignes détectées : " + maxRows);
+							
+							// --- Boucle d'importation initialisée à 1 (entête) ---
+							for (int i=1; i<maxRows; i++){
+								
+								//System.out.println("I = " + i);
 								
 								// --- Affectation des valeurs ---
 								uai = sheet.getRow(i).getCell(0).getStringCellValue();
-								nom = sheet.getRow(i).getCell(1).getStringCellValue();;
-								groupe = sheet.getRow(i).getCell(2).getStringCellValue();;
-								ville = sheet.getRow(i).getCell(3).getStringCellValue();;
+								nom = sheet.getRow(i).getCell(1).getStringCellValue();
+								groupe = sheet.getRow(i).getCell(2).getStringCellValue();
+								ville = sheet.getRow(i).getCell(3).getStringCellValue();
 								
 								resultat = proc.sp_UAI_Maj_Infos(i, uai, nom, groupe, ville);
 								
@@ -261,6 +266,8 @@ public class FrmMain extends JFrame {
 							
 							// --- Fermeture du fichier ---
 							wb.close();
+							
+							addLogView("*** Fin Maj UAI ***");
 							
 						} catch (Exception ex){
 							System.out.println("### FrmMain ### getBtnMajUAI ### " + ex.toString());
