@@ -41,12 +41,14 @@ public class DlgExtractions extends JDialog {
 	private JLabel labPartieD = new JLabel();
 	
 	private JLabel labTypeUAI = new JLabel();
+	private JLabel labGroupe = new JLabel();
 	private JLabel labCCP = new JLabel();
 		
 	private JButton btnFiltres = null;
 	private JTextField tfDepartement = null;
 	private JTextField tfGrade = null;
 	private JTextField tfTypeUAI = null;
+	private JTextField tfGroupe = null;
 	private JTextField tfCCP = null;
 	
 	private JButton btnFermer = null;
@@ -76,7 +78,7 @@ public class DlgExtractions extends JDialog {
 	}
 	
 	private void initialize() {
-		this.setSize(938, 610);
+		this.setSize(970, 610);
 		this.setContentPane(getJContentPane());
 		this.setTitle("Extractions - UNSA");
 		this.setResizable(false);
@@ -94,6 +96,7 @@ public class DlgExtractions extends JDialog {
 			jContentPane.add(getTfGrade(), null);
 			jContentPane.add(getTfTypeUAI(), null);
 			jContentPane.add(getTfCCP(), null);
+			jContentPane.add(getTfGroupe(), null);
 			jContentPane.add(getBtnFiltres(), null);
 			jContentPane.add(getBtnFermer(), null);
 						
@@ -110,7 +113,7 @@ public class DlgExtractions extends JDialog {
 			jContentPane.add(labEtablissement, null);
 			
 			labDepartement = new JLabel();
-			labDepartement.setBounds(new Rectangle(20, 250, 100, 30));
+			labDepartement.setBounds(new Rectangle(20, 141, 100, 30));
 			labDepartement.setFont(new Font("Arial", Font.PLAIN, 14));
 			labDepartement.setText("Departement");
 			jContentPane.add(labDepartement, null);
@@ -122,10 +125,16 @@ public class DlgExtractions extends JDialog {
 			jContentPane.add(labGrade, null);
 			
 			labTypeUAI = new JLabel();
-			labTypeUAI.setBounds(new Rectangle(403, 250, 70, 30));
+			labTypeUAI.setBounds(new Rectangle(340, 141, 70, 30));
 			labTypeUAI.setFont(new Font("Arial", Font.PLAIN, 14));
 			labTypeUAI.setText("Type UAI");
 			jContentPane.add(labTypeUAI, null);
+			
+			labGroupe = new JLabel();
+			labGroupe.setBounds(new Rectangle(642, 141, 70, 30));
+			labGroupe.setFont(new Font("Arial", Font.PLAIN, 14));
+			labGroupe.setText("Groupe");
+			jContentPane.add(labGroupe, null);
 			
 			labCCP = new JLabel();
 			labCCP.setBounds(new Rectangle(403, 291, 70, 30));
@@ -216,9 +225,10 @@ public class DlgExtractions extends JDialog {
 							// --- Filtres ---
 							String filtre_departement = tfDepartement.getText();
 							String filtre_type_uai = tfTypeUAI.getText();
+							String filtre_groupe = tfGroupe.getText();
 							
 							FcnExportEtablissement etab = new FcnExportEtablissement(dbMySQL, tfEmplacement_Etab.getText(), partieA, partieB, partieC, partieD, DlgExtractions.this);
-							etab.start(filtre_departement, filtre_type_uai);
+							etab.start(filtre_departement, filtre_type_uai, filtre_groupe);
 							
 							btnEtablissement.setEnabled(true);
 							tfEmplacement_Etab.setEnabled(true);
@@ -278,7 +288,7 @@ public class DlgExtractions extends JDialog {
 		if (btnFermer == null) {			
 			btnFermer = new JButton("Fermer");
 			btnFermer.setFont(new Font("Arial", Font.PLAIN, 14));
-			btnFermer.setBounds(new Rectangle(769, 541, 153, 30));
+			btnFermer.setBounds(new Rectangle(801, 541, 153, 30));
 			btnFermer.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {					
 					
@@ -313,7 +323,9 @@ public class DlgExtractions extends JDialog {
 		if (tfDepartement == null) {
 			tfDepartement = new JTextField();
 			tfDepartement.setFont(new Font("Arial", Font.PLAIN, 14));
-			tfDepartement.setBounds(new Rectangle(130, 251, 200, 30));
+			tfDepartement.setBounds(new Rectangle(130, 142, 200, 30));
+			tfDepartement.setOpaque(true);
+			tfDepartement.setBackground(Color.YELLOW);
 		}
 		return tfDepartement;
 	}
@@ -331,9 +343,22 @@ public class DlgExtractions extends JDialog {
 		if (tfTypeUAI == null) {
 			tfTypeUAI = new JTextField();
 			tfTypeUAI.setFont(new Font("Arial", Font.PLAIN, 14));
-			tfTypeUAI.setBounds(new Rectangle(483, 251, 200, 30));
+			tfTypeUAI.setBounds(new Rectangle(420, 142, 200, 30));
+			tfTypeUAI.setOpaque(true);
+			tfTypeUAI.setBackground(Color.YELLOW);
 		}
 		return tfTypeUAI;
+	}
+	
+	private JTextField getTfGroupe() {
+		if (tfGroupe == null) {
+			tfGroupe = new JTextField();
+			tfGroupe.setFont(new Font("Arial", Font.PLAIN, 14));
+			tfGroupe.setBounds(new Rectangle(722, 141, 200, 30));
+			tfGroupe.setOpaque(true);
+			tfGroupe.setBackground(Color.YELLOW);
+		}
+		return tfGroupe;
 	}
 	
 	private JTextField getTfCCP() {
