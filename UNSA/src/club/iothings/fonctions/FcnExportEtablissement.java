@@ -41,7 +41,7 @@ public class FcnExportEtablissement {
 		
 	}
 	
-	public String start(String strDepartement, String strTypeUAI){
+	public String start(String strDepartement, String strTypeUAI, String strGroupe){
 		String resultat = "";
 		
 		try {
@@ -66,6 +66,14 @@ public class FcnExportEtablissement {
 					compil_filtres = compil_filtres + " AND type_uai = '" + strTypeUAI + "'";
 				} else {
 					compil_filtres = "WHERE type_uai = '" + strTypeUAI + "'";
+				}
+			}
+			
+			if (strGroupe.compareTo("")!=0){
+				if (compil_filtres.compareTo("")!=0){
+					compil_filtres = compil_filtres + " AND groupe LIKE '" + strGroupe.replace("*", "%") + "'";
+				} else {
+					compil_filtres = "WHERE groupe = '" + strGroupe + "'";
 				}
 			}
 			
