@@ -5,24 +5,25 @@ import java.io.FileReader;
 import java.sql.Connection;
 import java.util.Date;
 import java.util.Vector;
-
+import club.iothings.ihm.FrmMain;
 import club.iothings.modules.ModStoredProcedures;
 import club.iothings.structures.StructImportDataCSV;
 
 public class FcnImporterDataXLSX {
 	
 	private Connection dbMySQL = null;
-		
+	private FrmMain parent = null;
+
 	private StructImportDataCSV imp_csv = null;
 	private ModStoredProcedures proc = null;
 	
 	private long interval;
 	
-	public FcnImporterDataXLSX(Connection connMySQL){
+	public FcnImporterDataXLSX(Connection connMySQL, FrmMain frmParent){
 		
 		// --- Affectation des valeurs ---
 		dbMySQL = connMySQL;
-		
+		parent = frmParent;
 		
 		imp_csv = new StructImportDataCSV(dbMySQL);
 		proc = new ModStoredProcedures(dbMySQL);
@@ -33,6 +34,8 @@ public class FcnImporterDataXLSX {
 		String resultat = "";
 		
 		try {
+			
+			parent.addLogView("*** Démarrage du processus d'importation ***");
 			
 			// --- Ouverture du fichier sélectionné ---
 			BufferedReader reader = new BufferedReader(new FileReader(strEmplacement));
@@ -58,6 +61,9 @@ public class FcnImporterDataXLSX {
 			}
 			reader.close();
 			
+			// --- Information de l'utilisateur sur le nombre de lignes contenues dans le fichier ---
+			parent.addLogView("Nombre de lignes détectées : " + vecLignes.size());
+			
 			//--- Déclaration des variables temporaires ---
 			String nom_usage = "";
 			String prenom = "";
@@ -72,6 +78,12 @@ public class FcnImporterDataXLSX {
 			//----- Reset des données antérieures -----
 			resultat = proc.sp_Data_SupprimerTout();
 
+			parent.addLogView("Suppression des données antérieures : " + resultat);
+			
+			// --- Paramétrage de la barre de progression ---
+			parent.updateProgressValue(0);
+			parent.updateProgressMax(vecLignes.size());
+			
 			// --- Boucle d'importation ---
 			for (int i=0; i < vecLignes.size(); i++){
 				
@@ -107,8 +119,17 @@ public class FcnImporterDataXLSX {
 					// --- T_DEPARTEMENT ---
 					proc.sp_Departement_ajouter(i, departement, "VIDE");
 					
+					
+					// --- Si ERREUR > affichage sur le LogView de la ligne concernée --- 
+					if (resultat.compareTo("OK")==0){
+						parent.addLogView("### ERREUR ### DATA ligne " + i);
+					}
+					
 				}
 
+				// --- Mise à jour de la progression --- 
+				parent.updateProgressValue(i+1);
+				parent.updateProgressText(String.valueOf(i+1) + " / " + vecLignes.size());
 			}
 			
 			// --- Capture de l'heure de fin ---
@@ -118,7 +139,10 @@ public class FcnImporterDataXLSX {
 			interval = date_fin.getTime() - date_debut.getTime();
 			interval = interval / 1000 / 60;
 						
-			resultat = "OK";			
+			resultat = "OK";
+			
+			parent.addLogView("*** Fin du processus d'importation ***");
+			parent.addLogView("*** Durée = " + interval + " minutes ***");
 			
 		} catch (Exception ex) {
 			resultat = "ERREUR";

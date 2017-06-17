@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
@@ -34,11 +35,12 @@ public class FrmMain extends JFrame {
 	
 	private JLabel labTitre = null;
 	private JLabel labVersion = null;
-	private JLabel labProgression = null;
 	
 	private JScrollPane scrollMessages = null;
 	private JList<String> listMessages = null;
 	private DefaultListModel<String> modele_messages = null;
+	
+	private JProgressBar progressImport = null;
 	
 	private Connection dbMySQL = null;
 
@@ -81,24 +83,19 @@ public class FrmMain extends JFrame {
 			jContentPane.add(getBtnExtraction(), null);
 			jContentPane.add(getBtnBatch(), null);
 			jContentPane.add(getScrollMessages(), null);
+			jContentPane.add(getProgressImport(), null);
 			
 			labTitre = new JLabel();
-			labTitre.setBounds(new Rectangle(20, 20, 600, 40));
+			labTitre.setBounds(new Rectangle(20, 20, 80, 40));
 			labTitre.setFont(new Font("Arial", Font.BOLD, 24));
 			labTitre.setText("UNSA");
 			jContentPane.add(labTitre, null);
 			
 			labVersion = new JLabel();
-			labVersion.setBounds(new Rectangle(30, 67, 600, 40));
+			labVersion.setBounds(new Rectangle(110, 24, 50, 40));
 			labVersion.setFont(new Font("Arial", Font.PLAIN, 14));
 			labVersion.setText("");
 			jContentPane.add(labVersion, null);
-			
-			labProgression= new JLabel();
-			labProgression.setBounds(new Rectangle(684, 110, 200, 40));
-			labProgression.setFont(new Font("Arial", Font.PLAIN, 14));
-			labProgression.setText("");
-			jContentPane.add(labProgression, null);
 		}
 		return jContentPane;
 	}
@@ -106,7 +103,7 @@ public class FrmMain extends JFrame {
 	private JScrollPane getScrollMessages() {
 		if (scrollMessages == null) {
 			scrollMessages = new JScrollPane();
-			scrollMessages.setBounds(new Rectangle(10, 161, 874, 339));
+			scrollMessages.setBounds(new Rectangle(10, 106, 874, 333));
 			scrollMessages.setViewportView(getListMessages());
 		}
 		return scrollMessages;
@@ -130,7 +127,7 @@ public class FrmMain extends JFrame {
 		if (btnConnexion == null) {			
 			btnConnexion = new JButton("Connexion");
 			btnConnexion.setFont(new Font("Arial", Font.PLAIN, 14));
-			btnConnexion.setBounds(new Rectangle(10, 511, 200, 50));
+			btnConnexion.setBounds(new Rectangle(10, 450, 200, 50));
 			btnConnexion.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					
@@ -183,7 +180,7 @@ public class FrmMain extends JFrame {
 		if (btnBatch == null) {			
 			btnBatch = new JButton("Batch");
 			btnBatch.setFont(new Font("Arial", Font.PLAIN, 14));
-			btnBatch.setBounds(new Rectangle(474, 511, 200, 50));
+			btnBatch.setBounds(new Rectangle(10, 511, 200, 50));
 			btnBatch.setEnabled(false);
 			btnBatch.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {			
@@ -197,11 +194,23 @@ public class FrmMain extends JFrame {
 		return btnBatch;
 	}
 	
+	private JProgressBar getProgressImport() {
+		if (progressImport == null) {
+			progressImport = new JProgressBar();
+			progressImport.setFont(new Font("Arial", Font.PLAIN, 14));
+			progressImport.setBounds(430, 450, 454, 50);
+			progressImport.setStringPainted(true);
+			progressImport.setString("%");
+			progressImport.setForeground(Color.getHSBColor(0.5833f, 0.80f, 1.00f));
+		}
+		return progressImport;
+	}
+	
 	private JButton getBtnImporter() {
 		if (btnImporter == null) {			
-			btnImporter = new JButton("Importer");
+			btnImporter = new JButton("Importer les données");
 			btnImporter.setFont(new Font("Arial", Font.PLAIN, 14));
-			btnImporter.setBounds(new Rectangle(220, 511, 200, 50));
+			btnImporter.setBounds(new Rectangle(220, 450, 200, 50));
 			btnImporter.setEnabled(false);
 			btnImporter.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {								
@@ -231,7 +240,7 @@ public class FrmMain extends JFrame {
 									emplacement = fc.getSelectedFile().getPath();
 									
 									// --- Initialisation du module d'importation ---
-									FcnImporterDataXLSX import_data = new FcnImporterDataXLSX(dbMySQL);	
+									FcnImporterDataXLSX import_data = new FcnImporterDataXLSX(dbMySQL, FrmMain.this);	
 									resultat = import_data.start(emplacement);
 									
 								}
@@ -259,22 +268,63 @@ public class FrmMain extends JFrame {
 
 		final String texte_final = strTexte;
 		
-		SwingUtilities.invokeLater(
-			    new Runnable(){
-			        public void run(){
-			        	modele_messages.addElement(texte_final);
-			        }
-			    }
-			);
+		try {
+			SwingUtilities.invokeLater(
+				    new Runnable(){
+				        public void run(){
+				        	modele_messages.addElement(texte_final);
+				        }
+				    }
+				);
+		} catch (Exception ex){
+			System.out.println("### FrmMain ### addLogView ### " + ex.toString());
+		}
 	}
 	
-	public void updateProgress(int indice, int valeurMax){
-		SwingUtilities.invokeLater(
-			    new Runnable(){
-			        public void run(){
-			        	labProgression.setText(indice + " / " + valeurMax);
-			        }
-			    }
-			);
+	public void updateProgressMax(int valeurMax){
+		
+		try {
+			SwingUtilities.invokeLater(
+				    new Runnable(){
+				        public void run(){
+				        	progressImport.setMaximum(valeurMax);
+				        }
+				    }
+				);
+		} catch (Exception ex){
+			System.out.println("### FrmMain ### updateProgressMax ### " + ex.toString());
+		}
 	}
+	
+	public void updateProgressValue(int indice){
+		
+		try {
+			SwingUtilities.invokeLater(
+				    new Runnable(){
+				        public void run(){
+				        	progressImport.setValue(indice);
+				        }
+				    }
+				);
+		} catch (Exception ex){
+			System.out.println("### FrmMain ### updateProgressValue ### " + ex.toString());
+		}
+	}
+	
+	public void updateProgressText(String strTexte){
+		
+		try {
+			SwingUtilities.invokeLater(
+				    new Runnable(){
+				        public void run(){
+				        	progressImport.setString(strTexte);
+				        }
+				    }
+				);
+		} catch (Exception ex){
+			System.out.println("### FrmMain ### updateProgressText ### " + ex.toString());
+		}
+	}
+	
+	
 }

@@ -84,7 +84,7 @@ public class FcnExportFiltres {
 			// --- Query ---
 			String query_mail = "SELECT D.adresse_mail FROM T_DATA D, T_UAI U WHERE D.uai_occupation = U.id " + filtre_grade + filtre_dep + filtre_typeUAI + filtre_CCP + filtre_groupe + filtre_ville + " ORDER BY adresse_mail";
 			
-			System.out.println("<FcnExportFiltres><start> Query = " + query_mail);
+			//System.out.println("<FcnExportFiltres><start> Query = " + query_mail);
 			
 			Statement stmt_mail = dbMySQL.createStatement();
 			ResultSet rset_mail = stmt_mail.executeQuery(query_mail);
