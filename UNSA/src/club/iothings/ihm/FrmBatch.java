@@ -9,6 +9,7 @@ import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.sql.Connection;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -53,15 +55,25 @@ public class FrmBatch extends JFrame {
 	//private String partie_C = "";
 	private String partie_D = "";
 	
+	private JLabel labPartieA = null;
+	private JTextField tfPartieA = null;
+	
+	private JLabel labPartieB = null;
+	private JTextField tfPartieB = null;
+	
+	private JLabel labPartieD = null;
+	private JScrollPane scrollPartieD = null;
+	private JTextArea taPartieD = null;
+	
 	public FrmBatch(Connection connMySQL) {
 		super();
 		initialize();
 		
 		// --- Partie A, B, C et D ---
-		partie_A = "UNSA Montpellier";
-		partie_B = "UNSA-EDUCATION Montpellier";
+		tfPartieA.setText("UNSA Montpellier");
+		tfPartieB.setText("UNSA-EDUCATION Montpellier");
 		//partie_C = "";
-		partie_D = "unsa-education.syndicat@ac-montpellier.fr,lrmp@unsa-education.org,frederic.vaysse@unsa.org,francoise.parrini@se-unsa.org,gilles,tena@gmail.com";
+		taPartieD.setText("unsa-education.syndicat@ac-montpellier.fr,lrmp@unsa-education.org,frederic.vaysse@unsa.org,francoise.parrini@se-unsa.org,gilles,tena@gmail.com");
 		
 		// --- Affectation de la connection à la base de données ---
 		dbMySQL = connMySQL;
@@ -70,7 +82,7 @@ public class FrmBatch extends JFrame {
 		tfEmplacement.setText("C:/Fichiers_Rectorat/Batch/");
 		
 		// --- Préfixe utilisé dans le nom des fichiers ---
-		tfPrefixe.setText("liste." + partie_B + ".");
+		tfPrefixe.setText("liste." + tfPartieB.getText() + ".");
 		
 		
 		String[] columnNames = {
@@ -113,7 +125,7 @@ public class FrmBatch extends JFrame {
 		if (jContentPane_haut == null){
 			jContentPane_haut = new JPanel();
 			jContentPane_haut.setLayout(null);
-			jContentPane_haut.setPreferredSize(new Dimension(150, 200));
+			jContentPane_haut.setPreferredSize(new Dimension(150, 300));
 			
 			jContentPane_haut.add(getBtnLancer(), null);
 			jContentPane_haut.add(getBtnAjouter(), null);
@@ -124,7 +136,7 @@ public class FrmBatch extends JFrame {
 			jContentPane_haut.add(getTfEmplacement(), null);
 			
 			labEmplacement = new JLabel();
-			labEmplacement.setBounds(new Rectangle(24, 112, 100, 30));
+			labEmplacement.setBounds(new Rectangle(476, 71, 100, 30));
 			labEmplacement.setFont(new Font("Arial", Font.PLAIN, 14));
 			labEmplacement.setText("Emplacement");
 			jContentPane_haut.add(labEmplacement, null);
@@ -143,6 +155,30 @@ public class FrmBatch extends JFrame {
 			labTitre.setText("Créer un batch de fichiers");
 			jContentPane_haut.add(labTitre, null);
 			
+			labPartieA = new JLabel();
+			labPartieA.setBounds(new Rectangle(24, 112, 100, 30));
+			labPartieA.setFont(new Font("Arial", Font.PLAIN, 14));
+			labPartieA.setText("Partie A");
+			jContentPane_haut.add(labPartieA, null);
+			
+			jContentPane_haut.add(getTfPartieA(), null);
+			
+			labPartieB = new JLabel();
+			labPartieB.setBounds(new Rectangle(476, 111, 100, 30));
+			labPartieB.setFont(new Font("Arial", Font.PLAIN, 14));
+			labPartieB.setText("Partie B");
+			jContentPane_haut.add(labPartieB, null);
+			
+			jContentPane_haut.add(getTfPartieB(), null);
+			
+			labPartieD = new JLabel();
+			labPartieD.setBounds(new Rectangle(24, 153, 100, 30));
+			labPartieD.setFont(new Font("Arial", Font.PLAIN, 14));
+			labPartieD.setText("Partie D");
+			jContentPane_haut.add(labPartieD, null);
+			
+			jContentPane_haut.add(getScrollPartieD(), null);
+			
 		}
 		return jContentPane_haut;
 	}
@@ -160,7 +196,7 @@ public class FrmBatch extends JFrame {
 		if (tfEmplacement == null) {
 			tfEmplacement = new JTextField();
 			tfEmplacement.setFont(new Font("Arial", Font.PLAIN, 14));
-			tfEmplacement.setBounds(new Rectangle(134, 112, 286, 30));
+			tfEmplacement.setBounds(new Rectangle(586, 71, 286, 30));
 		}
 		return tfEmplacement;
 	}
@@ -174,11 +210,29 @@ public class FrmBatch extends JFrame {
 		return tfPrefixe;
 	}
 	
+	private JTextField getTfPartieA() {
+		if (tfPartieA == null) {
+			tfPartieA = new JTextField();
+			tfPartieA.setFont(new Font("Arial", Font.PLAIN, 14));
+			tfPartieA.setBounds(new Rectangle(134, 113, 286, 30));
+		}
+		return tfPartieA;
+	}
+	
+	private JTextField getTfPartieB() {
+		if (tfPartieB == null) {
+			tfPartieB = new JTextField();
+			tfPartieB.setFont(new Font("Arial", Font.PLAIN, 14));
+			tfPartieB.setBounds(new Rectangle(586, 112, 286, 30));
+		}
+		return tfPartieB;
+	}
+		
 	private JButton getBtnLancer() {
 		if (btnLancer == null) {			
 			btnLancer = new JButton("Lancer");
 			btnLancer.setFont(new Font("Arial", Font.PLAIN, 14));
-			btnLancer.setBounds(new Rectangle(974, 159, 200, 30));
+			btnLancer.setBounds(new Rectangle(974, 259, 200, 30));
 			btnLancer.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					
@@ -197,6 +251,11 @@ public class FrmBatch extends JFrame {
 					String ville = "";
 					
 					String resultat = "";
+					
+					// --- Affectation des valeurs ---
+					partie_A = tfPartieA.getText();
+					partie_B = tfPartieB.getText();
+					partie_D = taPartieD.getText();
 					
 					// --- Vérification du contenu du tableau ---
 					if (tabModel.getRowCount() > 0){
@@ -253,7 +312,7 @@ public class FrmBatch extends JFrame {
 		if (btnAjouter == null) {			
 			btnAjouter = new JButton("Ajouter");
 			btnAjouter.setFont(new Font("Arial", Font.PLAIN, 14));
-			btnAjouter.setBounds(new Rectangle(10, 159, 200, 30));
+			btnAjouter.setBounds(new Rectangle(10, 259, 200, 30));
 			btnAjouter.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					
@@ -273,7 +332,7 @@ public class FrmBatch extends JFrame {
 		if (btnSupprimer == null) {			
 			btnSupprimer = new JButton("Supprimer");
 			btnSupprimer.setFont(new Font("Arial", Font.PLAIN, 14));
-			btnSupprimer.setBounds(new Rectangle(220, 159, 200, 30));
+			btnSupprimer.setBounds(new Rectangle(220, 259, 200, 30));
 			btnSupprimer.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					
@@ -288,7 +347,7 @@ public class FrmBatch extends JFrame {
 		if (btnReset == null) {			
 			btnReset = new JButton("Reset");
 			btnReset.setFont(new Font("Arial", Font.PLAIN, 14));
-			btnReset.setBounds(new Rectangle(430, 159, 200, 30));
+			btnReset.setBounds(new Rectangle(430, 259, 200, 30));
 			btnReset.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					
@@ -306,6 +365,25 @@ public class FrmBatch extends JFrame {
 			scrollBatch.setViewportView(getTabBatch());
 		}
 		return scrollBatch;
+	}
+	
+	private JTextArea getTaPartieD(){
+		if (taPartieD == null){
+			taPartieD = new JTextArea();
+			taPartieD.setFont(new Font("Arial", Font.PLAIN, 14));
+			taPartieD.setLineWrap(true);
+			taPartieD.setWrapStyleWord(true);
+		}
+		return taPartieD;
+	}
+	
+	private JScrollPane getScrollPartieD() {
+		if (scrollPartieD == null) {
+			scrollPartieD = new JScrollPane();
+			scrollPartieD.setBounds(new Rectangle(134, 154, 738, 70));
+			scrollPartieD.setViewportView(getTaPartieD());
+		}
+		return scrollPartieD;
 	}
 	
 	private JTable getTabBatch() {
