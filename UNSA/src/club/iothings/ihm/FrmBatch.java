@@ -310,7 +310,7 @@ public class FrmBatch extends JFrame {
 	
 	private JButton getBtnAjouter() {
 		if (btnAjouter == null) {			
-			btnAjouter = new JButton("Ajouter");
+			btnAjouter = new JButton("Ajouter un fichier au batch");
 			btnAjouter.setFont(new Font("Arial", Font.PLAIN, 14));
 			btnAjouter.setBounds(new Rectangle(10, 259, 200, 30));
 			btnAjouter.addActionListener(new java.awt.event.ActionListener() {
@@ -330,13 +330,28 @@ public class FrmBatch extends JFrame {
 	
 	private JButton getBtnSupprimer() {
 		if (btnSupprimer == null) {			
-			btnSupprimer = new JButton("Supprimer");
+			btnSupprimer = new JButton("Supprimer la sélection");
 			btnSupprimer.setFont(new Font("Arial", Font.PLAIN, 14));
 			btnSupprimer.setBounds(new Rectangle(220, 259, 200, 30));
 			btnSupprimer.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					
+					int selected_row = tabBatch.getSelectedRow();
 					
+					if (selected_row != -1){
+						
+						String nom_fichier = tabBatch.getValueAt(selected_row, 0).toString();
+						
+						Object[] options = {"Oui", "Non"};
+						int reponse = JOptionPane.showOptionDialog(FrmBatch.this, "Supprimer du batch le fichier sélectionné [" + nom_fichier + "] ?", "Batch", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+						
+						// --- Confirmation de l'utilisateur ---
+						if (reponse==0){
+							tabModel.removeRow(selected_row);
+						}
+					} else {
+						JOptionPane.showMessageDialog(FrmBatch.this, "Aucune ligne n'est sélectionnée", "Batch", JOptionPane.WARNING_MESSAGE);
+					}
 				}
 			});
 		}
