@@ -34,7 +34,7 @@ public class DataConnexion {
 		password = "unsa";
 		
 		// --- Version du logiciel client ---
-		version = "1.09";
+		version = "1.10";
 	}
 	
 	public String start(){

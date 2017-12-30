@@ -2,12 +2,10 @@ package club.iothings.ihm;
 
 import club.iothings.data.DataConnexion;
 import club.iothings.fonctions.FcnImporterDataXLSX;
-import club.iothings.modules.ModStoredProcedures;
 import club.iothings.modules.MonFiltre;
 
 import java.awt.Color;
 import java.awt.Dialog.ModalityType;
-import java.io.FileInputStream;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
@@ -24,8 +22,6 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 
 public class FrmMain extends JFrame {
@@ -36,7 +32,7 @@ public class FrmMain extends JFrame {
 	private JButton btnImporter = null;
 	private JButton btnExtractions = null;
 	private JButton btnBatch = null;
-	private JButton btnMajUAI = null;
+	private JButton btnParametres = null;
 	
 	private JLabel labTitre = null;
 	private JLabel labVersion = null;
@@ -87,7 +83,7 @@ public class FrmMain extends JFrame {
 			jContentPane.add(getBtnImporter(), null);
 			jContentPane.add(getBtnExtraction(), null);
 			jContentPane.add(getBtnBatch(), null);
-			jContentPane.add(getBtnMajUAI(), null);
+			jContentPane.add(getBtnParametres(), null);
 			jContentPane.add(getScrollMessages(), null);
 			jContentPane.add(getProgressImport(), null);
 			
@@ -148,7 +144,7 @@ public class FrmMain extends JFrame {
 						btnImporter.setEnabled(true);
 						btnExtractions.setEnabled(true);
 						btnBatch.setEnabled(true);
-						btnMajUAI.setEnabled(true);
+						btnParametres.setEnabled(true);
 						
 						addLogView("Connexion à la base de données " + data.getDbName() + " : OK");
 						
@@ -201,83 +197,23 @@ public class FrmMain extends JFrame {
 		return btnBatch;
 	}
 	
-	private JButton getBtnMajUAI() {
-		if (btnMajUAI == null) {			
-			btnMajUAI = new JButton("Maj UAI");
-			btnMajUAI.setFont(new Font("Arial", Font.PLAIN, 14));
-			btnMajUAI.setBounds(new Rectangle(10, 511, 200, 50));
-			btnMajUAI.setEnabled(false);
-			btnMajUAI.addActionListener(new java.awt.event.ActionListener() {
+	private JButton getBtnParametres() {
+		if (btnParametres == null) {			
+			btnParametres = new JButton("Paramètres");
+			btnParametres.setFont(new Font("Arial", Font.PLAIN, 14));
+			btnParametres.setBounds(new Rectangle(10, 511, 200, 50));
+			btnParametres.setEnabled(false);
+			btnParametres.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {			
 					
-					ModStoredProcedures proc = new ModStoredProcedures(dbMySQL);
-
-					// Ouverture de la fenêtre de sélection du fichier
-					JFileChooser fc = new JFileChooser();
-					fc.setAcceptAllFileFilterUsed(false);					
-					fc.setPreferredSize(new Dimension(600,400));
-					MonFiltre filtreTXT = new MonFiltre(new String[]{"xlsx","XLSX"}, "Fichier Excel");
-					fc.addChoosableFileFilter(filtreTXT);
-					
-					int returnVal = fc.showOpenDialog(FrmMain.this);
-					
-					if (returnVal == JFileChooser.APPROVE_OPTION) {
-						
-						try {
-							
-							addLogView("*** Démarrage Maj UAI ***");
-							
-							String emplacement = fc.getSelectedFile().getPath();
-							FileInputStream fileExcel = new FileInputStream(emplacement);
-							
-							XSSFWorkbook wb = new XSSFWorkbook(fileExcel);
-							XSSFSheet sheet = wb.getSheetAt(0);
-							
-							int maxRows = sheet.getLastRowNum();
-							
-							String resultat = "";
-							
-							// ---
-							String uai = "";
-							String nom = "";
-							String groupe = "";
-							String ville = "";
-							
-							addLogView("Nombre de lignes détectées : " + maxRows);
-							
-							// --- Boucle d'importation initialisée à 1 (entête) ---
-							for (int i=1; i<maxRows; i++){
-								
-								//System.out.println("I = " + i);
-								
-								// --- Affectation des valeurs ---
-								uai = sheet.getRow(i).getCell(0).getStringCellValue();
-								nom = sheet.getRow(i).getCell(1).getStringCellValue();
-								groupe = sheet.getRow(i).getCell(2).getStringCellValue();
-								ville = sheet.getRow(i).getCell(3).getStringCellValue();
-								
-								resultat = proc.sp_UAI_Maj_Infos(i, uai, nom, groupe, ville);
-								
-								// ---
-								if (resultat.compareTo("ERREUR")==0){
-									addLogView("### ERREUR ### UAI Ligne " + i);
-								}
-							}
-							
-							// --- Fermeture du fichier ---
-							wb.close();
-							
-							addLogView("*** Fin Maj UAI ***");
-							
-						} catch (Exception ex){
-							System.out.println("### FrmMain ### getBtnMajUAI ### " + ex.toString());
-						}
-					}
+					FrmParametres param = new FrmParametres(dbMySQL);
+					param.setLocationRelativeTo(null);
+					param.setVisible(true);
 				}
 			});
 		}
-		return btnMajUAI;
-	}
+		return btnParametres;
+	}	
 	
 	private JProgressBar getProgressImport() {
 		if (progressImport == null) {
@@ -328,6 +264,9 @@ public class FrmMain extends JFrame {
 									FcnImporterDataXLSX import_data = new FcnImporterDataXLSX(dbMySQL, FrmMain.this);	
 									resultat = import_data.start(emplacement);
 									
+									if (resultat.compareTo("OK")!=0){
+										JOptionPane.showMessageDialog(FrmMain.this, "Une erreur est survenue durant l'importation", "Batch", JOptionPane.ERROR_MESSAGE);
+									}
 								}
 								
 								btnImporter.setEnabled(true);

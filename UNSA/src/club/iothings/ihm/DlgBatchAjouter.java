@@ -30,6 +30,8 @@ public class DlgBatchAjouter extends JDialog {
 	private JLabel labGroupe = null;
 	private JLabel labVille = null;
 	
+	private JLabel labTitre = null;
+	
 	private JLabel labNomFichier = null;
 	private JTextField tfNomFichier = null;
 	
@@ -136,7 +138,7 @@ public class DlgBatchAjouter extends JDialog {
 	private void initialize() {
 		this.setSize(1200, 610);
 		this.setContentPane(getJContentPane());
-		this.setTitle("Ajouter Batch - UNSA");
+		this.setTitle("Ajouter un fichier au batch - UNSA");
 		this.setResizable(false);
 	}
 	
@@ -145,6 +147,12 @@ public class DlgBatchAjouter extends JDialog {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(null);
 			jContentPane.add(getBtnValider(), null);
+			
+			labTitre = new JLabel();
+			labTitre.setBounds(new Rectangle(20, 20, 600, 40));
+			labTitre.setFont(new Font("Arial", Font.BOLD, 24));
+			labTitre.setText("Ajouter un fichier au batch");
+			jContentPane.add(labTitre, null);
 			
 			jContentPane.add(getTfNomFichier(), null);
 			

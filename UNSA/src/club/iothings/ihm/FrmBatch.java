@@ -257,49 +257,54 @@ public class FrmBatch extends JFrame {
 					partie_B = tfPartieB.getText();
 					partie_D = taPartieD.getText();
 					
-					// --- Vérification du contenu du tableau ---
-					if (tabModel.getRowCount() > 0){
-						
-						// --- Balayage des lignes du tableau ---
-						for (int i=0; i<tabModel.getRowCount(); i++){
+					// --- Vérification des saisies obligatoires ---
+					if ((emplacement.compareTo("")!=0) && (prefixe.compareTo("")!=0) && (partie_A.compareTo("")!=0) && (partie_B.compareTo("")!=0) && (partie_D.compareTo("")!=0)){
+						// --- Vérification du contenu du tableau ---
+						if (tabModel.getRowCount() > 0){
 							
-							// --- Affectation des valeurs contenues dans le tableau ---
-							nom_fichier = tabModel.getValueAt(i, 0).toString();
-							departement = tabModel.getValueAt(i, 1).toString();
-							grade = tabModel.getValueAt(i, 2).toString();
-							type_uai = tabModel.getValueAt(i, 3).toString();
-							ccp = tabModel.getValueAt(i, 4).toString();
-							groupe = tabModel.getValueAt(i, 5).toString();
-							ville = tabModel.getValueAt(i, 6).toString();
-							
-							// --- Résultat du traitement ---
-							resultat = filt.start(prefixe + nom_fichier, departement, grade, type_uai, ccp, groupe, ville);
-							
-							// --- Renvoi du résultat du traitement dans le tableau ---
-							tabModel.setValueAt(resultat, i, 7);
-						}
-						
-						try {
-							
-							// --- Création de la liste récapitulative ---
-							BufferedWriter out_liste = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(emplacement + "liste.csv"), "UTF-8"));
-							
-							for (int i=0; i < tabModel.getRowCount(); i++){
+							// --- Balayage des lignes du tableau ---
+							for (int i=0; i<tabModel.getRowCount(); i++){
 								
 								// --- Affectation des valeurs contenues dans le tableau ---
 								nom_fichier = tabModel.getValueAt(i, 0).toString();
+								departement = tabModel.getValueAt(i, 1).toString();
+								grade = tabModel.getValueAt(i, 2).toString();
+								type_uai = tabModel.getValueAt(i, 3).toString();
+								ccp = tabModel.getValueAt(i, 4).toString();
+								groupe = tabModel.getValueAt(i, 5).toString();
+								ville = tabModel.getValueAt(i, 6).toString();
 								
-								out_liste.write(partie_A + ";" + partie_B + ";" + nom_fichier + ";" + partie_D);
-								out_liste.newLine();
+								// --- Résultat du traitement ---
+								resultat = filt.start(prefixe + nom_fichier, departement, grade, type_uai, ccp, groupe, ville);
+								
+								// --- Renvoi du résultat du traitement dans le tableau ---
+								tabModel.setValueAt(resultat, i, 7);
 							}
-							out_liste.close();
 							
-						} catch (Exception ex){
-							System.out.println("### FrmBatch ### getBtnLancer # Liste de la liste " + ex.toString());
+							try {
+								
+								// --- Création de la liste récapitulative ---
+								BufferedWriter out_liste = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(emplacement + "liste.csv"), "UTF-8"));
+								
+								for (int i=0; i < tabModel.getRowCount(); i++){
+									
+									// --- Affectation des valeurs contenues dans le tableau ---
+									nom_fichier = tabModel.getValueAt(i, 0).toString();
+									
+									out_liste.write(partie_A + ";" + partie_B + ";" + nom_fichier + ";" + partie_D);
+									out_liste.newLine();
+								}
+								out_liste.close();
+								
+							} catch (Exception ex){
+								System.out.println("### FrmBatch ### getBtnLancer # Liste de la liste " + ex.toString());
+							}
+							
+						} else {
+							JOptionPane.showMessageDialog(FrmBatch.this, "Le tableau est vide", "Batch - UNSA", JOptionPane.WARNING_MESSAGE);
 						}
-						
 					} else {
-						JOptionPane.showMessageDialog(FrmBatch.this, "Le tableau est vide", "Batch - UNSA", JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(FrmBatch.this, "Les champs de saisie ne sont pas remplis correctement", "Batch - UNSA", JOptionPane.WARNING_MESSAGE);
 					}
 					
 				}
