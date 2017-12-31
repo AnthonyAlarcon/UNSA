@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -13,8 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import club.iothings.modules.ModCellRendererCriteres;
+import club.iothings.modules.ModStoredProcedures;
 
 public class DlgBatchAjouter extends JDialog {
 
@@ -22,6 +25,8 @@ public class DlgBatchAjouter extends JDialog {
 	private JPanel jContentPane = null;
 	private FrmBatch parent = null;
 	private JButton btnValider = null;
+	
+	private JCheckBox chEnregistrer = null;
 	
 	private JLabel labDepartement = null;
 	private JLabel labGrade = null;
@@ -146,12 +151,14 @@ public class DlgBatchAjouter extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(null);
+			
 			jContentPane.add(getBtnValider(), null);
+			jContentPane.add(getChEnregistrer(), null);
 			
 			labTitre = new JLabel();
 			labTitre.setBounds(new Rectangle(20, 20, 600, 40));
 			labTitre.setFont(new Font("Arial", Font.BOLD, 24));
-			labTitre.setText("Ajouter un fichier au batch");
+			labTitre.setText("Ajouter un nouveau fichier au batch");
 			jContentPane.add(labTitre, null);
 			
 			jContentPane.add(getTfNomFichier(), null);
@@ -204,15 +211,26 @@ public class DlgBatchAjouter extends JDialog {
 			labVille.setFont(new Font("Arial", Font.PLAIN, 14));
 			labVille.setText("Ville");
 			jContentPane.add(labVille, null);
+			
 		}
 		return jContentPane;
 	}
 
+	private JCheckBox getChEnregistrer() {
+		if (chEnregistrer== null) {
+			chEnregistrer = new JCheckBox("Enregistrer comme modèle");
+			chEnregistrer.setFont(new Font("Arial", Font.PLAIN, 14));
+			chEnregistrer.setHorizontalTextPosition(SwingConstants.RIGHT);
+			chEnregistrer.setBounds(480, 89, 206, 30);
+		}
+		return chEnregistrer;
+	}
+	
 	private JButton getBtnValider() {
 		if (btnValider == null) {			
 			btnValider = new JButton("Valider");
 			btnValider.setFont(new Font("Arial", Font.PLAIN, 14));
-			btnValider.setBounds(new Rectangle(743, 62, 153, 57));
+			btnValider.setBounds(new Rectangle(931, 89, 233, 57));
 			btnValider.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {					
 					
@@ -344,11 +362,25 @@ public class DlgBatchAjouter extends JDialog {
 						
 						parent.AjouterLigne(nom_fichier, cumul_dep, cumul_grade, cumul_typeUAI, cumul_CCP, cumul_groupe, cumul_ville);
 						
+						// --- Enregistrement du modèle ---
+						if (chEnregistrer.isSelected()){
+							
+							String resultat_modele = "";
+							
+							ModStoredProcedures proc = new ModStoredProcedures(dbMySQL);
+							
+							resultat_modele = proc.sp_Modele_Ajouter(nom_fichier, cumul_dep, cumul_typeUAI, cumul_grade, cumul_CCP, cumul_groupe, cumul_ville);
+							
+							if (resultat_modele.compareTo("OK")!=0){
+								JOptionPane.showMessageDialog(DlgBatchAjouter.this, "Une erreur est survenue durant l'enregistrement du modèle : " + resultat_modele, "Erreur", JOptionPane.ERROR_MESSAGE);
+							}	
+						}
+						
 						// --- Fermeture de la fenêtre ---
 						DlgBatchAjouter.this.dispose();
 						
 					} else {
-						JOptionPane.showMessageDialog(DlgBatchAjouter.this, "Veuillez saisir un nom de fichier", "", JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(DlgBatchAjouter.this, "Veuillez saisir un nom de fichier", "Erreur", JOptionPane.WARNING_MESSAGE);
 					}
 				}
 			});
@@ -415,6 +447,19 @@ public class DlgBatchAjouter extends JDialog {
 			tfNomFichier = new JTextField();
 			tfNomFichier.setFont(new Font("Arial", Font.PLAIN, 14));
 			tfNomFichier.setBounds(new Rectangle(134, 89, 310, 30));
+			
+			tfNomFichier.addCaretListener(new javax.swing.event.CaretListener() {
+				public void caretUpdate(javax.swing.event.CaretEvent e) {
+					
+					String saisie = tfNomFichier.getText();
+					
+					if (CheckModele(saisie).compareTo("OK")!=0){
+						
+					} else {
+						
+					}
+				}
+			});
 		}
 		return tfNomFichier;
 	}
@@ -983,6 +1028,15 @@ public class DlgBatchAjouter extends JDialog {
 			resultat = "ERREUR";
 			System.out.println("### DlgBatchAjouter ### RemplirTableau " + model.toString() + " " + ex.toString());
 		}
+		
+		return resultat;
+	}
+	
+	private String CheckModele(String str){
+		
+		String resultat = "";
+		
+		
 		
 		return resultat;
 	}
