@@ -177,5 +177,31 @@ public class ModStoredProcedures {
 		}
 		return resultat;
 	}
+	
+	public String sp_Modele_Ajouter(String strNom, String strCritere, String strDepartement, String strTypeUAI, String strGrade, String strCCP, String strGroupe, String strVille){	
+
+		String resultat = "";
+		
+		try {
+			CallableStatement stmt = null;
+			stmt = dbMySQL.prepareCall("{call pm_modele_ajouter(?,?,?,?,?,?,?,?)}");					
+			stmt.setString("inom", strNom);
+			stmt.setString("icritere", strCritere);
+			stmt.setString("idepartement", strDepartement);
+			stmt.setString("itype_uai", strTypeUAI);
+			stmt.setString("igrade", strGrade);
+			stmt.setString("iccp", strCCP);
+			stmt.setString("igroupe", strGroupe);	
+			stmt.setString("iville", strVille);	
+			stmt.execute();
+			
+			resultat = "OK";
+			
+		} catch(Exception ex) {
+			resultat = "ERREUR";
+			System.out.println("### ModStoredProcedures ### sp_Modele_Ajouter ### " + ex.toString());
+		}
+		return resultat;
+	}
 
 }
