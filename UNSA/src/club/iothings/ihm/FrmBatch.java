@@ -1,11 +1,13 @@
 package club.iothings.ihm;
 
 import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.Dialog.ModalityType;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.sql.Connection;
@@ -35,6 +37,7 @@ public class FrmBatch extends JFrame {
 	private JButton btnModele = null;
 	private JButton btnSupprimer = null;
 	private JButton btnReset = null;
+	private JButton btnRepertoire = null;
 	
 	private JLabel labTitre = null;
 	
@@ -135,6 +138,7 @@ public class FrmBatch extends JFrame {
 			jContentPane_haut.add(getBtnModele(), null);
 			jContentPane_haut.add(getBtnSupprimer(), null);
 			jContentPane_haut.add(getBtnReset(), null);
+			jContentPane_haut.add(getBtnRepertoire(), null);
 			
 			
 			jContentPane_haut.add(getTfEmplacement(), null);
@@ -403,6 +407,31 @@ public class FrmBatch extends JFrame {
 		return btnReset;
 	}
 	
+	private JButton getBtnRepertoire() {
+		if (btnRepertoire == null) {			
+			btnRepertoire = new JButton(">");
+			btnRepertoire.setFont(new Font("Arial", Font.PLAIN, 14));
+			btnRepertoire.setBounds(new Rectangle(882, 70, 50, 30));
+			btnRepertoire.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					
+					try {
+						
+						Desktop desktop = Desktop.getDesktop();
+				        File dirToOpen = null;
+				        
+				        dirToOpen = new File(tfEmplacement.getText());
+				        desktop.open(dirToOpen);
+				        						
+					} catch (Exception ex){
+						JOptionPane.showMessageDialog(FrmBatch.this, ex.toString(), "Erreur", JOptionPane.WARNING_MESSAGE);
+					}
+				}
+			});
+		}
+		return btnRepertoire;
+	}
+	
 	private JScrollPane getScrollBatch() {
 		if (scrollBatch == null) {
 			scrollBatch = new JScrollPane();
@@ -535,7 +564,7 @@ public class FrmBatch extends JFrame {
 		
 		try {
 			
-			String query = "SELECT nom, departement, type_uai, grade, ccp, groupe, ville FROM T_MODELE";
+			String query = "SELECT nom, departement, type_uai, grade, ccp, groupe, ville FROM T_MODELE WHERE nom = '" + strNom + "'";
 			
 			Statement stmt = dbMySQL.createStatement();
 			ResultSet rset = stmt.executeQuery(query);

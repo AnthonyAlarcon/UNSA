@@ -370,7 +370,7 @@ public class DlgBatchAjouter extends JDialog {
 							
 							ModStoredProcedures proc = new ModStoredProcedures(dbMySQL);
 							
-							resultat_modele = proc.sp_Modele_Ajouter(nom_fichier, cumul_dep, cumul_typeUAI, cumul_grade, cumul_CCP, cumul_groupe, cumul_ville);
+							resultat_modele = proc.sp_Modele_Ajouter(nom_fichier, "VIDE", cumul_dep, cumul_typeUAI, cumul_grade, cumul_CCP, cumul_groupe, cumul_ville);
 							
 							if (resultat_modele.compareTo("OK")!=0){
 								JOptionPane.showMessageDialog(DlgBatchAjouter.this, "L'enregistrement du modèle n'a pas fonctionné : " + resultat_modele, "Erreur", JOptionPane.ERROR_MESSAGE);

@@ -179,14 +179,15 @@ public class ModStoredProcedures {
 		return resultat;
 	}
 	
-	public String sp_Modele_Ajouter(String strNom, String strDepartement, String strTypeUAI, String strGrade, String strCCP, String strGroupe, String strVille){	
+	public String sp_Modele_Ajouter(String strNom, String strDesignation, String strDepartement, String strTypeUAI, String strGrade, String strCCP, String strGroupe, String strVille){	
 
 		String resultat = "";
 		
 		try {
 			CallableStatement stmt = null;
-			stmt = dbMySQL.prepareCall("{call pm_modele_ajouter(?,?,?,?,?,?,?)}");					
+			stmt = dbMySQL.prepareCall("{call pm_modele_ajouter(?,?,?,?,?,?,?,?)}");					
 			stmt.setString("inom", strNom);
+			stmt.setString("idesignation", strDesignation);
 			stmt.setString("idepartement", strDepartement);
 			stmt.setString("itype_uai", strTypeUAI);
 			stmt.setString("igrade", strGrade);

@@ -3,7 +3,6 @@ package club.iothings.ihm;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -11,17 +10,22 @@ import java.sql.Statement;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
+import club.iothings.modules.ModCellRendererCriteres;
+import club.iothings.modules.ModCellRendererModele;
+
 public class DlgModele extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
 	private JButton btnAnnuler = null;
+	private JButton btnValider = null;
 	//private JButton btnRechercher = null;
 	
 	private FrmBatch parent = null;
@@ -43,7 +47,9 @@ public class DlgModele extends JDialog {
 		parent = frmParent;
 		
 		// Paramétrage du Header
-		String[] columnNames = {"Nom",
+		String[] columnNames = {"Choix",
+				"Numéro",
+				"Désignation",
 				};
 		
 		//TabModel du JTable
@@ -79,11 +85,42 @@ public class DlgModele extends JDialog {
 		return btnAnnuler;
 	}
 	
+	private JButton getBtnValider() {
+		if (btnValider == null) {
+			btnValider = new JButton("Valider");
+			btnValider.setBounds(new Rectangle(10, 362, 674, 46));
+			btnValider.setFont(new Font("Arial", Font.PLAIN, 14));
+			btnValider.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+
+					if (tabModel.getRowCount() > 0){
+						for (int i=0; i < tabModel.getRowCount(); i++){
+							
+														
+							String choix = String.valueOf(tabModel.getValueAt(i, 0)); 
+							String numero = String.valueOf(tabModel.getValueAt(i, 1)); 
+							
+							if (choix.compareTo("true")==0){
+								parent.AjouterModele(numero);
+							}
+						}
+						
+						DlgModele.this.dispose();
+						
+					} else {
+						JOptionPane.showMessageDialog(DlgModele.this, "Le tableau est vide", "Modèle - UNSA", JOptionPane.WARNING_MESSAGE);
+					}
+				}
+			});
+		}
+		return btnValider;
+	}
+	
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(null);
-			//jContentPane.add(getBtnOK(), null);
+			jContentPane.add(getBtnValider(), null);
 			jContentPane.add(getBtnAnnuler(), null);
 			jContentPane.add(getScrollModele(), null);
 			
@@ -100,7 +137,7 @@ public class DlgModele extends JDialog {
 	private JScrollPane getScrollModele() {
 		if (scrollModele == null) {
 			scrollModele = new JScrollPane();
-			scrollModele.setBounds(new Rectangle(10, 105, 674, 303));
+			scrollModele.setBounds(new Rectangle(10, 75, 674, 276));
 			scrollModele.setViewportView(getTabModele());
 		}
 		return scrollModele;
@@ -109,15 +146,29 @@ public class DlgModele extends JDialog {
 	private JTable getTabModele() {
 		if (tabModele == null) {
 			
-			//Paramétrage pour les check box
+			// --- Personnalisation du TableModel ---
 			DefaultTableModel tableModel = new DefaultTableModel()
 			{
 				private static final long serialVersionUID = 1L;
 				
-				// Verrouillage des cellules
+				// --- Verrouillage des cellules du tableau sauf la première colonne ---
 				@Override
 				public boolean isCellEditable(int row, int column) {					
-					return false;
+					if (column == 0){
+						return true;
+					} else {
+						return false;
+					}
+				}
+			
+				// --- CheckBox sur la première colonne ---
+				@Override
+				public Class<?> getColumnClass(int columnIndex)
+				{
+					// Format Boolean sur la première colonne
+					if(columnIndex==0)
+						return Boolean.class;
+					return super.getColumnClass(columnIndex);
 				}
 			};
 			
@@ -132,27 +183,9 @@ public class DlgModele extends JDialog {
 			tabModele.setRowHeight(40);
 			tabModele.setFont(new Font("Arial", Font.PLAIN, 14));
 			
+			// --- Personnalisation de l'affichage --- 
+			tabModele.setDefaultRenderer(Object.class, new ModCellRendererModele());
 			
-			
-			// Action Clic
-			tabModele.addMouseListener(new java.awt.event.MouseAdapter() {
-				public void mouseClicked(java.awt.event.MouseEvent e) {
-					
-					// Double-clic
-					if (e.getClickCount() == 2){								
-						
-						if ((e.getButton() == MouseEvent.BUTTON1)) {
-														
-							String selection = "";
-							selection = String.valueOf(tabModele.getValueAt(tabModele.getSelectedRow(), 0));
-							
-							parent.AjouterModele(selection);							
-							DlgModele.this.dispose();
-						}
-					}
-
-				}
-			});
 		}
 		return tabModele;
 	}
@@ -161,7 +194,9 @@ public class DlgModele extends JDialog {
 		tableau.getTableHeader().setReorderingAllowed(false);
 		//tableau.getTableHeader().setResizingAllowed(false);
 		
-		tableau.getColumnModel().getColumn(0).setPreferredWidth(500);
+		tableau.getColumnModel().getColumn(0).setPreferredWidth(50);
+		tableau.getColumnModel().getColumn(1).setPreferredWidth(150);
+		tableau.getColumnModel().getColumn(2).setPreferredWidth(400);
 	}
 	
 	private String AfficherTableau(){
@@ -169,30 +204,21 @@ public class DlgModele extends JDialog {
 		
 		try {
 			
-			String query = "SELECT nom, departement, type_uai, grade, ccp, groupe, ville FROM T_MODELE";
+			String query = "SELECT nom, designation FROM T_MODELE";
 			
 			Statement stmt = dbMySQL.createStatement();
 			ResultSet rset = stmt.executeQuery(query);
 			
-			int colNo = 1;
+			int colNo = 3;
 			tabModel.setRowCount(0);
-			
-			String cellValue ="";
-
 			
 			
 			while(rset.next()) {
-				String[] ligne = new String[colNo];
+				Object[] ligne = new Object[colNo];
 				
-				for(int i = 0; i < colNo; i++){
-					cellValue = rset.getString(i+1);
-					
-					if (cellValue==null){
-						cellValue = "";
-					}
-					
-					ligne[i] = cellValue;
-				}
+				ligne[0] = Boolean.FALSE;
+				ligne[1] = rset.getString(1);
+				ligne[2] = rset.getString(2);
 				
 				tabModel.addRow(ligne);
 			}
