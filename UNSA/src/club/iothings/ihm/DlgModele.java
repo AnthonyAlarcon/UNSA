@@ -2,7 +2,11 @@ package club.iothings.ihm;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -10,14 +14,17 @@ import java.sql.Statement;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 import club.iothings.modules.ModCellRendererModele;
+import club.iothings.modules.ModStoredProcedures;
 
 public class DlgModele extends JDialog {
 
@@ -37,6 +44,10 @@ public class DlgModele extends JDialog {
 		
 	private JScrollPane scrollModele= null;
 	private JTable tabModele = null;
+	
+	// Menus Contextuels
+	private JPopupMenu tabMenu = null;
+	private JMenuItem mnuSupprimer = null;
 	
 	public DlgModele(Connection connMySQL, FrmBatch frmParent) {
 		super();
@@ -59,6 +70,36 @@ public class DlgModele extends JDialog {
 		DimensionColonnes(tabModele);
 		
 		AfficherTableau();
+		
+		
+		// Création des Menus Contextuels
+		tabMenu = new JPopupMenu();
+		
+		mnuSupprimer = new JMenuItem("Supprimer le modèle : ");
+		mnuSupprimer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionevent){
+				
+				String modele = String.valueOf(tabModele.getValueAt(tabModele.getSelectedRow(), 1));			
+				
+				try {
+					
+					ModStoredProcedures proc = new ModStoredProcedures(dbMySQL);
+					
+					String resultat = proc.sp_Modele_Supprimer(modele);
+					
+					if (resultat.compareTo("OK")!=0){
+						JOptionPane.showMessageDialog(DlgModele.this, resultat, "Erreur", JOptionPane.ERROR_MESSAGE);
+					}
+					
+					AfficherTableau();
+					
+				} catch (Exception ex) {
+					System.out.println("### DlgModele ### AfficherTableau ### " + ex.toString());
+				}
+					
+			}
+		});
+		tabMenu.add(mnuSupprimer);
 	}
 
 	private void initialize() {
@@ -184,6 +225,31 @@ public class DlgModele extends JDialog {
 			
 			// --- Personnalisation de l'affichage --- 
 			tabModele.setDefaultRenderer(Object.class, new ModCellRendererModele());
+			
+			
+			tabModele.addMouseListener(new java.awt.event.MouseAdapter() {
+				public void mouseClicked(java.awt.event.MouseEvent e) {
+					
+					try {
+						
+						Point p = e.getPoint();
+						int ligne = tabModele.rowAtPoint(p);
+						
+						String selection = String.valueOf(tabModele.getValueAt(ligne, 1));			
+						
+						// --- Clic Droit --- 
+						if ((e.getButton() == MouseEvent.BUTTON3)) {
+							
+							mnuSupprimer.setText("Supprimer le modèle : " + selection);
+
+							tabMenu.show(e.getComponent(),e.getX(), e.getY());
+						}
+						
+					} catch (Exception ex){
+						System.out.println("### DlgModele ### mouseClicked ### " + ex.toString());
+					}
+				}
+			});
 			
 		}
 		return tabModele;

@@ -28,6 +28,8 @@ public class FrmParametres extends JFrame {
 	private JPanel jContentPane = null;
 	private JButton btnMajUAI = null;
 	private JButton btnMajGrade = null;
+	private JButton btnFermer = null;
+	
 	private JLabel labTitre = null;
 	private JTextArea taMajUAI = null;
 	private JTextArea taMajGrade = null;
@@ -41,8 +43,8 @@ public class FrmParametres extends JFrame {
 	}
 
 	private void initialize() {
-		this.setSize(800, 600);
-		this.setMinimumSize(new Dimension(800, 600));
+		this.setSize(800, 400);
+		this.setMinimumSize(new Dimension(800, 400));
 		this.setTitle("Paramètres - UNSA");
 		this.setContentPane(getJContentPane());
 		this.setResizable(false);
@@ -54,6 +56,7 @@ public class FrmParametres extends JFrame {
 			jContentPane.setLayout(null);
 			jContentPane.add(getBtnMajUAI(), null);
 			jContentPane.add(getBtnMajGrade(), null);
+			jContentPane.add(getBtnFermer(), null);
 			
 			labTitre = new JLabel();
 			labTitre.setBounds(new Rectangle(20, 20, 600, 40));
@@ -255,5 +258,20 @@ public class FrmParametres extends JFrame {
 			});
 		}
 		return btnMajGrade;
+	}
+	
+	private JButton getBtnFermer() {
+		if (btnFermer == null) {			
+			btnFermer = new JButton("Fermer");
+			btnFermer.setFont(new Font("Arial", Font.PLAIN, 14));
+			btnFermer.setBounds(new Rectangle(612, 311, 161, 50));
+			btnFermer.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					
+					FrmParametres.this.dispose();
+				}
+			});
+		}
+		return btnFermer;
 	}
 }

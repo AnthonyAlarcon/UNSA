@@ -164,6 +164,25 @@ public class ModStoredProcedures {
 		}
 		return resultat;
 	}
+	
+	public String sp_Modele_Supprimer(String strNom){	
+
+		String resultat = "";
+		
+		try {
+			CallableStatement stmt = null;
+			stmt = dbMySQL.prepareCall("{call pm_modele_supprimer(?)}");
+			stmt.setString("inom", strNom);
+			stmt.execute();
+			
+			resultat = "OK";
+						
+		} catch(Exception ex) {
+			resultat = "ERREUR";
+			System.out.println("### ModStoredProcedures ### sp_Modele_Supprimer ###" + ex.toString());
+		}
+		return resultat;
+	}
 		
 	public String sp_UAI_ajouter(Integer ind, String strId, String strNom, String strDepartement, String strAcademie, String strTypeUAI, String strGroupe, String strVille){	
 
