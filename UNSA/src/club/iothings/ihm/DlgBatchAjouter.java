@@ -1,5 +1,6 @@
 package club.iothings.ihm;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.sql.Connection;
@@ -372,7 +373,7 @@ public class DlgBatchAjouter extends JDialog {
 							resultat_modele = proc.sp_Modele_Ajouter(nom_fichier, cumul_dep, cumul_typeUAI, cumul_grade, cumul_CCP, cumul_groupe, cumul_ville);
 							
 							if (resultat_modele.compareTo("OK")!=0){
-								JOptionPane.showMessageDialog(DlgBatchAjouter.this, "Une erreur est survenue durant l'enregistrement du modèle : " + resultat_modele, "Erreur", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(DlgBatchAjouter.this, "L'enregistrement du modèle n'a pas fonctionné : " + resultat_modele, "Erreur", JOptionPane.ERROR_MESSAGE);
 							}	
 						}
 						
@@ -447,16 +448,22 @@ public class DlgBatchAjouter extends JDialog {
 			tfNomFichier = new JTextField();
 			tfNomFichier.setFont(new Font("Arial", Font.PLAIN, 14));
 			tfNomFichier.setBounds(new Rectangle(134, 89, 310, 30));
+			tfNomFichier.setOpaque(true);
+			tfNomFichier.setBackground(Color.YELLOW);
 			
 			tfNomFichier.addCaretListener(new javax.swing.event.CaretListener() {
 				public void caretUpdate(javax.swing.event.CaretEvent e) {
 					
 					String saisie = tfNomFichier.getText();
 					
-					if (CheckModele(saisie).compareTo("OK")!=0){
-						
+					if (tfNomFichier.getText().compareTo("")==0) {
+						tfNomFichier.setBackground(Color.YELLOW);
 					} else {
-						
+						if (CheckModele(saisie).compareTo("OK")==0){
+							tfNomFichier.setBackground(Color.GREEN);
+						} else {
+							tfNomFichier.setBackground(Color.RED);
+						}
 					}
 				}
 			});
@@ -1032,11 +1039,31 @@ public class DlgBatchAjouter extends JDialog {
 		return resultat;
 	}
 	
-	private String CheckModele(String str){
+	private String CheckModele(String strNom){
 		
 		String resultat = "";
 		
-		
+		try {
+			
+			int count = 0;
+			String query = "SELECT nom FROM T_MODELE WHERE nom = '" + strNom + "'";
+			
+			Statement stmt = dbMySQL.createStatement();
+			ResultSet rset = stmt.executeQuery(query);
+			
+			while (rset.next()){
+				count = count + 1;
+			}
+			
+			if (count == 1){
+				resultat = "DOUBLON";
+			} else {
+				resultat = "OK";
+			}
+		} catch (Exception ex){
+			resultat = "ERREUR";
+			System.out.println("### DlgBatchAjouter ### CheckModele " + ex.toString());
+		}
 		
 		return resultat;
 	}

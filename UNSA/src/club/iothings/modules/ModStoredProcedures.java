@@ -2,6 +2,7 @@ package club.iothings.modules;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
@@ -196,10 +197,20 @@ public class ModStoredProcedures {
 			
 			resultat = "OK";
 			
-		} catch(Exception ex) {
-			resultat = "ERREUR";
+		} catch (SQLException exsql){
+			if (exsql.getErrorCode() == 1062){
+				resultat = "DOUBLON";
+				System.out.println("### ModStoredProcedures ### sp_Modele_Ajouter ### " + exsql.getErrorCode());
+			} else {
+				resultat = "ERREUR SQL " + exsql.getErrorCode();
+				System.out.println("### ModStoredProcedures ### sp_Modele_Ajouter ### " + exsql.getErrorCode());
+			}
+		
+		} catch (Exception ex) {
+			resultat = "EXCEPTION";
 			System.out.println("### ModStoredProcedures ### sp_Modele_Ajouter ### " + ex.toString());
 		}
+		
 		return resultat;
 	}
 
