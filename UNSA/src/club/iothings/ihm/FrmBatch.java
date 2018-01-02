@@ -9,6 +9,8 @@ import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -30,6 +32,7 @@ public class FrmBatch extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JButton btnLancer = null;
 	private JButton btnAjouter = null;
+	private JButton btnModele = null;
 	private JButton btnSupprimer = null;
 	private JButton btnReset = null;
 	
@@ -129,6 +132,7 @@ public class FrmBatch extends JFrame {
 			
 			jContentPane_haut.add(getBtnLancer(), null);
 			jContentPane_haut.add(getBtnAjouter(), null);
+			jContentPane_haut.add(getBtnModele(), null);
 			jContentPane_haut.add(getBtnSupprimer(), null);
 			jContentPane_haut.add(getBtnReset(), null);
 			
@@ -315,7 +319,7 @@ public class FrmBatch extends JFrame {
 	
 	private JButton getBtnAjouter() {
 		if (btnAjouter == null) {			
-			btnAjouter = new JButton("Ajouter un fichier au batch");
+			btnAjouter = new JButton("Nouveau fichier");
 			btnAjouter.setFont(new Font("Arial", Font.PLAIN, 14));
 			btnAjouter.setBounds(new Rectangle(10, 259, 200, 30));
 			btnAjouter.addActionListener(new java.awt.event.ActionListener() {
@@ -333,11 +337,31 @@ public class FrmBatch extends JFrame {
 		return btnAjouter;
 	}
 	
+	private JButton getBtnModele() {
+		if (btnModele == null) {			
+			btnModele = new JButton("Utiliser un modèle");
+			btnModele.setFont(new Font("Arial", Font.PLAIN, 14));
+			btnModele.setBounds(new Rectangle(220, 259, 200, 30));
+			btnModele.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					
+					// --- Ouverture ---
+					DlgModele modele = new DlgModele(dbMySQL, FrmBatch.this);
+					modele.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					modele.setModalityType(ModalityType.APPLICATION_MODAL);
+					modele.setLocationRelativeTo(null);
+					modele.setVisible(true);
+				}
+			});
+		}
+		return btnModele;
+	}
+	
 	private JButton getBtnSupprimer() {
 		if (btnSupprimer == null) {			
 			btnSupprimer = new JButton("Supprimer la sélection");
 			btnSupprimer.setFont(new Font("Arial", Font.PLAIN, 14));
-			btnSupprimer.setBounds(new Rectangle(220, 259, 200, 30));
+			btnSupprimer.setBounds(new Rectangle(430, 259, 200, 30));
 			btnSupprimer.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					
@@ -367,7 +391,7 @@ public class FrmBatch extends JFrame {
 		if (btnReset == null) {			
 			btnReset = new JButton("Reset");
 			btnReset.setFont(new Font("Arial", Font.PLAIN, 14));
-			btnReset.setBounds(new Rectangle(430, 259, 200, 30));
+			btnReset.setBounds(new Rectangle(640, 259, 200, 30));
 			btnReset.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					
@@ -503,6 +527,32 @@ public class FrmBatch extends JFrame {
 		} catch (Exception ex){
 			System.out.println("### FrmBatch ### AjouterLigne " + ex.toString());
 		}
+	}
+	
+	public String AjouterModele(String strNom){
+		
+		String resultat = "";
+		
+		try {
+			
+			String query = "SELECT nom, departement, type_uai, grade, ccp, groupe, ville FROM T_MODELE";
+			
+			Statement stmt = dbMySQL.createStatement();
+			ResultSet rset = stmt.executeQuery(query);
+			
+			while (rset.next()){
+				
+				AjouterLigne(rset.getString(1), rset.getString(2), rset.getString(3), rset.getString(4), rset.getString(5), rset.getString(6), rset.getString(7));
+				
+				resultat = "OK";
+			}
+						
+		} catch (Exception ex){
+			resultat = "ERREUR";
+			System.out.println("### FrmBatch ### AjouterModele " + ex.toString());
+		}
+		
+		return resultat;
 	}
 	
 }
