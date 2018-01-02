@@ -17,7 +17,6 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
-import club.iothings.modules.ModCellRendererCriteres;
 import club.iothings.modules.ModCellRendererModele;
 
 public class DlgModele extends JDialog {
@@ -224,7 +223,7 @@ public class DlgModele extends JDialog {
 			}
 			
 		} catch (Exception ex){
-			
+			System.out.println("### DlgModele ### AfficherTableau ### " + ex.toString());
 		}
 		
 		return resultat;

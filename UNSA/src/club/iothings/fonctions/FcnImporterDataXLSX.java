@@ -111,7 +111,7 @@ public class FcnImporterDataXLSX {
 					resultat = proc.sp_Data_Ajouter(i, nom_usage, prenom, adresse_mail, academie, uai_occupation, grade, ccp);
 					
 					// --- T_GRADE ---
-					proc.sp_Grade_Ajouter(i, grade, "VIDE", "VIDE");
+					proc.sp_Grade_Ajouter(i, grade, "VIDE", "VIDE");		
 					
 					// --- T_UAI ---
 					proc.sp_UAI_ajouter(i, uai_occupation, "VIDE", departement, academie, type_uai, "VIDE", "VIDE");

@@ -103,6 +103,68 @@ public class ModStoredProcedures {
 		return resultat;
 	}
 	
+	public String sp_Grade_Maj_Ajouter(Integer ind, String strId, String strDesignation){	
+
+		String resultat = "";
+		
+		try {
+			CallableStatement stmt = null;
+			stmt = dbMySQL.prepareCall("{call pm_grade_maj_ajouter(?,?)}");					
+			stmt.setString("iid", strId);
+			stmt.setString("idesignation", strDesignation);
+			stmt.execute();
+			
+			resultat = "OK";
+		
+		} catch (MySQLIntegrityConstraintViolationException ex_primary){
+			resultat = "PRIMARY";
+			
+		} catch(Exception ex) {
+			resultat = "ERREUR";
+			System.out.println("### ModStoredProcedures ### sp_Grade_Maj_Ajouter ### (ligne " + ind + ") " + ex.toString());
+		}
+		return resultat;
+	}
+	
+	public String sp_Grade_Maj_SupprimerTout(){	
+
+		String resultat = "";
+		
+		try {
+			CallableStatement stmt = null;
+			stmt = dbMySQL.prepareCall("{call px_grade_maj_supprimertout}");
+			stmt.execute();
+			
+			resultat = "OK";
+			
+		} catch (MySQLIntegrityConstraintViolationException ex_primary){
+			resultat = "PRIMARY";
+			
+		} catch(Exception ex) {
+			resultat = "ERREUR";
+			System.out.println("### ModStoredProcedures ### sp_Grade_Maj_SupprimerTout ###" + ex.toString());
+		}
+		return resultat;
+	}
+	
+	public String sp_Grade_Maj_Designation(){	
+
+		String resultat = "";
+		
+		try {
+			CallableStatement stmt = null;
+			stmt = dbMySQL.prepareCall("{call px_grade_maj_designation}");
+			stmt.execute();
+			
+			resultat = "OK";
+						
+		} catch(Exception ex) {
+			resultat = "ERREUR";
+			System.out.println("### ModStoredProcedures ### sp_Grade_Maj_AppliquerModifications ###" + ex.toString());
+		}
+		return resultat;
+	}
+		
 	public String sp_UAI_ajouter(Integer ind, String strId, String strNom, String strDepartement, String strAcademie, String strTypeUAI, String strGroupe, String strVille){	
 
 		String resultat = "";
