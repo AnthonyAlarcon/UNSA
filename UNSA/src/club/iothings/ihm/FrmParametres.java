@@ -66,7 +66,7 @@ public class FrmParametres extends JFrame {
 			
 			taMajUAI = new JTextArea();
 			taMajUAI.setBounds(new Rectangle(330, 80, 443, 70));
-			taMajUAI.setText("La mise à jour des données UAI s'effectue via l'importation d'un fichier Excel (XLSX) comportant 4 colonnes au format texte : "
+			taMajUAI.setText("La mise à jour des données UAI s'effectue via l'importation d'un fichier Excel (XLSX) avec entête comportant 4 colonnes au format texte : "
 					+ "Numéro UAI, Nom UAI, Groupe, Ville.");
 			taMajUAI.setWrapStyleWord(true);
 			taMajUAI.setLineWrap(true);
@@ -81,7 +81,7 @@ public class FrmParametres extends JFrame {
 			taMajGrade = new JTextArea();
 			taMajGrade.setBounds(new Rectangle(330, 170, 443, 70));
 			taMajGrade.setText("Les désignations relatives aux grades peuvent être mise à jour via cette fonctionnalité. "
-					+ "Le fichier Excel utilisé devra comporter deux colonnes au format texte : grade (identifiant), désignation.");
+					+ "Le fichier Excel utilisé devra comporter une ligne d'entête et deux colonnes au format texte : grade (identifiant), désignation.");
 			taMajGrade.setWrapStyleWord(true);
 			taMajGrade.setLineWrap(true);
 			taMajGrade.setOpaque(false);
@@ -144,7 +144,7 @@ public class FrmParametres extends JFrame {
 							System.out.println("Nombre de lignes détectées : " + maxRows);
 							
 							// --- Boucle d'importation initialisée à 1 (entête) ---
-							for (int i=1; i<maxRows; i++){
+							for (int i=1; i<maxRows+1; i++){
 								
 								//System.out.println("I = " + i);
 								
@@ -157,8 +157,8 @@ public class FrmParametres extends JFrame {
 								resultat = proc.sp_UAI_Maj_Infos(i, uai, nom, groupe, ville);
 								
 								// ---
-								if (resultat.compareTo("ERREUR")==0){
-									System.out.println("### ERREUR ### UAI Ligne " + i);
+								if (resultat.compareTo("OK")!=0){
+									System.out.println("### ERREUR ### FrmParametres ### getBtnMajUAI Ligne " + i);
 								}
 							}
 							
@@ -168,7 +168,7 @@ public class FrmParametres extends JFrame {
 							System.out.println("*** Fin Maj UAI ***");
 							
 						} catch (Exception ex){
-							System.out.println("### FrmMain ### getBtnMajUAI ### " + ex.toString());
+							System.out.println("### ERREUR ### FrmParametres ### getBtnMajUAI " + ex.toString());
 						}
 					}
 				}
@@ -221,7 +221,7 @@ public class FrmParametres extends JFrame {
 							proc.sp_Grade_Maj_SupprimerTout();
 							
 							// --- Boucle d'importation initialisée à 1 (entête) ---
-							for (int i=1; i<maxRows; i++){
+							for (int i=1; i < maxRows+1; i++){
 								
 								//System.out.println("I = " + i);
 								
@@ -232,8 +232,8 @@ public class FrmParametres extends JFrame {
 								resultat = proc.sp_Grade_Maj_Ajouter(i, id, designation);
 								
 								// ---
-								if (resultat.compareTo("ERREUR")==0){
-									System.out.println("### ERREUR ### GRADE Ligne " + i);
+								if (resultat.compareTo("OK")!=0){
+									System.out.println("### ERREUR ### FrmParametres ### getBtnMajGrade Ligne " + i + " / " + id);
 								}
 							}
 							
