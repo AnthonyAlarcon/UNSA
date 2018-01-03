@@ -79,7 +79,7 @@ public class DlgModele extends JDialog {
 		mnuSupprimer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionevent){
 				
-				String modele = String.valueOf(tabModele.getValueAt(tabModele.getSelectedRow(), 1));			
+				String modele = String.valueOf(tabModele.getValueAt(tabModele.getSelectedRow(), 1));		
 				
 				try {
 					
@@ -211,6 +211,7 @@ public class DlgModele extends JDialog {
 					return super.getColumnClass(columnIndex);
 				}
 			};
+			tableModel.fireTableDataChanged();
 			
 			tabModele = new JTable();
 			tabModele.setModel(tableModel);
@@ -232,17 +233,27 @@ public class DlgModele extends JDialog {
 					
 					try {
 						
-						Point p = e.getPoint();
-						int ligne = tabModele.rowAtPoint(p);
-						
-						String selection = String.valueOf(tabModele.getValueAt(ligne, 1));			
-						
 						// --- Clic Droit --- 
 						if ((e.getButton() == MouseEvent.BUTTON3)) {
 							
-							mnuSupprimer.setText("Supprimer le modèle : " + selection);
+							Point p = e.getPoint();
+							
+							int row = tabModele.rowAtPoint(p);
+							int col = tabModele.columnAtPoint(p);
+							
+							for (int i=0; i<2; i++){
+								tabModel.fireTableCellUpdated(row, i);
+							}
+							
+							String selection = String.valueOf(tabModele.getValueAt(row, 1));
+							
+							// Change la ligne sélectionnée si clic droit
+							tabModele.changeSelection(row, col, false, false);
 
+							mnuSupprimer.setText("Supprimer le modèle : " + selection);
+							
 							tabMenu.show(e.getComponent(),e.getX(), e.getY());
+							
 						}
 						
 					} catch (Exception ex){

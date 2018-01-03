@@ -179,7 +179,7 @@ public class ModStoredProcedures {
 						
 		} catch(Exception ex) {
 			resultat = "ERREUR";
-			System.out.println("### ModStoredProcedures ### sp_Modele_Supprimer ###" + ex.toString());
+			System.out.println("### ModStoredProcedures ### sp_Modele_Supprimer ### " + ex.toString());
 		}
 		return resultat;
 	}
